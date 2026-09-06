@@ -1,12 +1,18 @@
 /* MANNELI — کاتالوگ: محصولات و نمایندگان */
+// ---------- متغیرهای صفحه جزئیات محصول ----------
+let currentPdpProductId = null;
+let currentPdpQty = 1;
+
 // ---------- محصولات ----------
 function renderProducts(cat = 'all') {
     const grid = $('products-grid');
+    if (!grid) return;
     grid.innerHTML = '';
     const list = cat === 'all' ? products : products.filter(p => p.category === cat);
     list.forEach(p => {
         const card = document.createElement('div');
         card.className = 'product-card';
+        card.onclick = () => openProductDetails(p.id);
         card.innerHTML = `
             <img class="product-img" src="${p.img}" alt="${p.title}" loading="lazy"
                  onerror="this.style.display='none'">
@@ -22,7 +28,7 @@ function renderProducts(cat = 'all') {
                         <span style="font-size:12px;color:var(--c-muted)">قیمت مصوب</span>
                         <span class="product-price">${faNum(p.price)} <small>تومان</small></span>
                     </div>
-                    <button class="btn btn-primary btn-sm btn-block" onclick="addToCart(${p.id})">
+                    <button class="btn btn-primary btn-sm btn-block" onclick="event.stopPropagation(); addToCart(${p.id})">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                         افزودن به سبد
                     </button>
@@ -35,6 +41,303 @@ function filterProducts(cat) {
     document.querySelectorAll('#products-filter-row .filter-btn').forEach(b =>
         b.classList.toggle('active', b.dataset.cat === cat));
     renderProducts(cat);
+}
+
+// ---------- صفحه اختصاصی جزئیات کالا (PDP) ----------
+function openProductDetails(productId) {
+    const p = products.find(x => x.id === productId);
+    if (!p) return;
+
+    currentPdpProductId = p.id;
+    currentPdpQty = 1;
+
+    // به‌روزرسانی نان‌ریزه (Breadcrumb)
+    const bcCat = $('pdp-bc-cat');
+    if (bcCat) {
+        bcCat.innerText = p.category;
+        bcCat.onclick = () => {
+            switchTab('products');
+            filterProducts(p.category);
+        };
+    }
+    const bcTitle = $('pdp-bc-title');
+    if (bcTitle) bcTitle.innerText = p.title;
+
+    // تصویر و گالری کالا
+    const imgEl = $('pdp-img');
+    if (imgEl) {
+        imgEl.src = p.img;
+        imgEl.alt = p.title;
+    }
+    const claimEl = $('pdp-claim-badge');
+    if (claimEl) claimEl.innerText = p.claim || 'ضمانت اصالت مانلی';
+
+    // اطلاعات هویتی و فنی
+    const catEl = $('pdp-cat');
+    if (catEl) catEl.innerText = p.category;
+
+    const skuEl = $('pdp-sku');
+    if (skuEl) skuEl.innerText = 'کد کالا: ' + (p.code || ('MNL-00' + p.id));
+
+    const titleEl = $('pdp-title');
+    if (titleEl) titleEl.innerText = p.title;
+
+    const ratingEl = $('pdp-rating');
+    if (ratingEl) ratingEl.innerText = faNum(p.rating || 4.9);
+
+    const reviewsCountEl = $('pdp-reviews-count');
+    if (reviewsCountEl) reviewsCountEl.innerText = faNum(p.reviewsCount || 42) + ' دیدگاه همکاران و اساتید';
+
+    const ratingCountPill = $('pdp-rating-count-pill');
+    if (ratingCountPill) ratingCountPill.innerText = `(${faNum(p.reviewsCount || 42)})`;
+
+    const reviewsLinkText = $('pdp-reviews-link-text');
+    if (reviewsLinkText) reviewsLinkText.innerText = `${faNum(p.reviewsCount || 42)} دیدگاه`;
+
+    const recommendPct = $('pdp-recommend-pct');
+    if (recommendPct) {
+        const pct = 90 + ((p.id * 3) % 9);
+        recommendPct.innerText = `${faNum(pct)}٪`;
+    }
+
+    // مشخصات سریع
+    const quickSpecsEl = $('pdp-quick-specs');
+    if (quickSpecsEl) {
+        quickSpecsEl.innerHTML = p.specs.map(s => `
+            <div class="pdp-quick-spec-item">
+                <b>${s[0]}:</b>
+                <span>${s[1]}</span>
+            </div>
+        `).join('');
+    }
+
+    // معرفی و توضیحات
+    const descEl = $('pdp-description');
+    if (descEl) {
+        descEl.innerText = p.description || 'تجهیزات و مواد تخصصی مانلی با بالاترین استانداردهای کیفی برای استفاده حرفه‌ای در سالن‌های ناخن طراحی و تولید شده است.';
+    }
+
+    // ویژگی‌های برجسته
+    const featuresList = $('pdp-features-list');
+    if (featuresList) {
+        const feats = p.features && p.features.length > 0 ? p.features : [
+            "فرمولاسیون ایمن و مورد تایید اساتید ارشد کاشت ناخن",
+            "دوام و کارایی بالا در ساعات کاری طولانی سالنی",
+            "سازگاری کامل با کلیه برندها و استانداردهای روز بین‌المللی"
+        ];
+        featuresList.innerHTML = feats.map(f => `
+            <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>${f}</span>
+            </li>
+        `).join('');
+    }
+
+    // باکس خرید و قیمت
+    const priceEl = $('pdp-price');
+    if (priceEl) priceEl.innerText = faNum(p.price);
+
+    const mobPriceEl = $('pdp-mob-price');
+    if (mobPriceEl) mobPriceEl.innerText = faNum(p.price);
+
+    const qtyValEl = $('pdp-qty-val');
+    if (qtyValEl) qtyValEl.innerText = faNum(1);
+
+    // ریست کردن وضعیت نمایش ویژگی‌های برجسته
+    const featWrap = $('pdp-features-wrapper');
+    if (featWrap) featWrap.classList.add('is-collapsed');
+    const featToggleBtn = $('pdp-features-toggle-btn');
+    if (featToggleBtn) featToggleBtn.classList.remove('is-expanded');
+    const featToggleText = $('pdp-features-toggle-text');
+    if (featToggleText) featToggleText.innerText = 'مشاهده بیشتر';
+
+    // پیشنهاد نماینده رسمی در شهر کاربر (در صورت وجود)
+    const repNotice = $('pdp-rep-notice');
+    if (repNotice) {
+        const userCity = (currentUser && currentUser.city) || '';
+        const rep = findRepForCity(userCity);
+        if (rep) {
+            repNotice.innerHTML = `
+                <div class="pdp-rep-notice-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>نماینده رسمی در ${rep.region}: ${rep.name}</span>
+                </div>
+                <p style="margin:0;font-size:11.5px;color:var(--c-muted)">
+                    تحویل سریع‌تر با تماس مستقیم: <span class="ltr" style="font-weight:700;color:var(--c-rose-deep)">${rep.phone}</span>
+                </p>
+            `;
+        } else {
+            repNotice.innerHTML = `
+                <div class="pdp-rep-notice-head">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>تحویل سریع‌تر از نماینده محلی</span>
+                </div>
+                <p style="margin:0;font-size:11.5px;color:var(--c-muted)">
+                    در مرحله نهایی ثبت سفارش، نماینده رسمی شهر شما به صورت هوشمند شناسایی و برای تحویل فوری پیشنهاد می‌شود.
+                </p>
+            `;
+        }
+    }
+
+    // جدول مشخصات فنی تفصیلی
+    const specsTable = $('pdp-specs-table-body');
+    if (specsTable) {
+        const full = p.fullSpecs && p.fullSpecs.length > 0 ? p.fullSpecs : [
+            ["نام و مدل کالا", p.title],
+            ["دسته‌بندی", p.category],
+            ["کد شناسه محصول", p.code || ('MNL-00' + p.id)],
+            ["قیمت مصوب سراسری", faNum(p.price) + " تومان"],
+            ["تضمین کیفیت", p.claim || "گارانتی اصالت مانلی"]
+        ];
+        specsTable.innerHTML = full.map(([k, v]) => `
+            <tr>
+                <th>${k}</th>
+                <td>${v}</td>
+            </tr>
+        `).join('');
+    }
+
+    // نکات اساتید
+    const tipsText = $('pdp-tips-text');
+    if (tipsText) {
+        tipsText.innerText = p.usageTips || 'جهت ماندگاری بالاتر و کسب بهترین نتیجه از کار، توصیه می‌شود کلیه مراحل زیرسازی و مصرف مطابق استانداردهای آکادمی مانلی انجام پذیرد.';
+    }
+
+    // محصولات مکمل و مرتبط
+    renderPdpRelatedProducts(p);
+
+    // پیش‌فرض تب مشخصات
+    switchPdpTab('specs');
+
+    // هدایت به تب صفحه جزئیات محصول
+    switchTab('product-detail');
+}
+
+function changePdpQty(delta) {
+    currentPdpQty += delta;
+    if (currentPdpQty < 1) currentPdpQty = 1;
+    if (currentPdpQty > 50) currentPdpQty = 50;
+    const qtyEl = $('pdp-qty-val');
+    if (qtyEl) qtyEl.innerText = faNum(currentPdpQty);
+}
+
+function addCurrentProductToCart() {
+    if (!currentPdpProductId) return;
+    addToCart(currentPdpProductId, currentPdpQty);
+}
+
+function switchPdpTab(tabName) {
+    document.querySelectorAll('.pdp-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pdptab === tabName);
+    });
+    document.querySelectorAll('.pdp-tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    const target = $('pdp-panel-' + tabName);
+    if (target) target.classList.add('active');
+}
+
+function togglePdpFeatures() {
+    const wrap = $('pdp-features-wrapper');
+    const btn = $('pdp-features-toggle-btn');
+    const text = $('pdp-features-toggle-text');
+    if (!wrap) return;
+
+    const isCollapsed = wrap.classList.contains('is-collapsed');
+    if (isCollapsed) {
+        wrap.classList.remove('is-collapsed');
+        if (btn) btn.classList.add('is-expanded');
+        if (text) text.innerText = 'بستن ویژگی‌ها';
+    } else {
+        wrap.classList.add('is-collapsed');
+        if (btn) btn.classList.remove('is-expanded');
+        if (text) text.innerText = 'مشاهده بیشتر';
+    }
+}
+
+function goToPdpReviews() {
+    switchPdpTab('reviews');
+    const target = document.querySelector('.pdp-details-tabs-card');
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function goToPdpSpecs() {
+    switchPdpTab('specs');
+    const target = document.querySelector('.pdp-details-tabs-card');
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+function submitPdpReview() {
+    const nameInput = $('pdp-new-review-name');
+    const textInput = $('pdp-new-review-text');
+    const name = (nameInput.value || '').trim();
+    const text = (textInput.value || '').trim();
+
+    if (!name || !text) {
+        showAlert('لطفاً نام و متن دیدگاه خود را وارد نمایید.', 'warning');
+        return;
+    }
+
+    const reviewsList = $('pdp-reviews-list');
+    if (reviewsList) {
+        const newReview = document.createElement('div');
+        newReview.className = 'pdp-review-card';
+        newReview.innerHTML = `
+            <div class="pdp-review-head">
+                <span class="pdp-review-author">${name}</span>
+                <span class="pdp-review-date">لحظاتی پیش</span>
+            </div>
+            <div class="pdp-review-body">${text}</div>
+        `;
+        reviewsList.prepend(newReview);
+    }
+
+    nameInput.value = '';
+    textInput.value = '';
+    showAlert('دیدگاه شما با موفقیت ثبت شد و پس از بررسی منتشر خواهد شد.', 'success');
+}
+
+function renderPdpRelatedProducts(currentProduct) {
+    const grid = $('pdp-related-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    // انتخاب محصولاتی به جز محصول فعلی
+    const related = products
+        .filter(p => p.id !== currentProduct.id)
+        .slice(0, 4);
+
+    related.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => openProductDetails(p.id);
+        card.innerHTML = `
+            <img class="product-img" src="${p.img}" alt="${p.title}" loading="lazy"
+                 onerror="this.style.display='none'">
+            <div class="product-body">
+                <span class="product-cat">${p.category}</span>
+                <h3 class="product-title">${p.title}</h3>
+                <div class="product-specs">
+                    ${p.specs.map(s => `<span><b>${s[0]}:</b> ${s[1]}</span>`).join('')}
+                </div>
+                <span class="product-claim">${p.claim}</span>
+                <div class="product-foot">
+                    <div class="product-price-row">
+                        <span style="font-size:12px;color:var(--c-muted)">قیمت مصوب</span>
+                        <span class="product-price">${faNum(p.price)} <small>تومان</small></span>
+                    </div>
+                    <button class="btn btn-primary btn-sm btn-block" onclick="event.stopPropagation(); addToCart(${p.id})">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        افزودن به سبد
+                    </button>
+                </div>
+            </div>`;
+        grid.appendChild(card);
+    });
 }
 
 // ---------- نمایندگان ----------

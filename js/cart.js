@@ -1,9 +1,10 @@
 /* MANNELI — سبد خرید و چکاوت (منطق نماینده‌اول) */
 // ---------- سبد خرید ----------
-function addToCart(id) {
+function addToCart(id, qty = 1) {
     const p = products.find(x => x.id === id);
+    if (!p) return;
     const item = cart.find(x => x.id === id);
-    if (item) item.qty += 1; else cart.push({ ...p, qty: 1 });
+    if (item) item.qty += qty; else cart.push({ ...p, qty: qty });
     updateCartUI();
     showCartToast();
 }
@@ -27,8 +28,8 @@ function updateCartUI() {
     } else {
         box.innerHTML = cart.map(i => `
             <div class="cart-item">
-                <div>
-                    <p class="ci-title">${i.title}</p>
+                <div style="cursor:pointer" onclick="toggleCart(false); openProductDetails(${i.id})">
+                    <p class="ci-title" style="transition:color .2s" onmouseover="this.style.color='var(--c-rose)'" onmouseout="this.style.color=''">${i.title}</p>
                     <p class="ci-price">${faNum(i.price * i.qty)} تومان</p>
                 </div>
                 <div class="qty-ctl">

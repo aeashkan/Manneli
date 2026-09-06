@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>پورتال برند مانلی | Manneli Brand Portal</title>
-    <link rel="stylesheet" href="css/base.css?v=1.1">
-    <link rel="stylesheet" href="css/layout.css?v=1.1">
-    <link rel="stylesheet" href="css/components.css?v=1.1">
-    <link rel="stylesheet" href="css/overlays.css?v=1.1">
-    <script src="js/data.js?v=1.1" defer></script>
-    <script src="js/iran-map-data.js?v=1.1" defer></script>
-    <script src="js/ui.js?v=1.1" defer></script>
-    <script src="js/catalog.js?v=1.1" defer></script>
-    <script src="js/cart.js?v=1.1" defer></script>
-    <script src="js/account.js?v=1.1" defer></script>
-    <script src="js/b2b.js?v=1.1" defer></script>
-    <script src="js/main.js?v=1.1" defer></script>
+    <link rel="stylesheet" href="css/base.css?v=1.4">
+    <link rel="stylesheet" href="css/layout.css?v=1.4">
+    <link rel="stylesheet" href="css/components.css?v=1.4">
+    <link rel="stylesheet" href="css/overlays.css?v=1.4">
+    <script src="js/data.js?v=1.4" defer></script>
+    <script src="js/iran-map-data.js?v=1.4" defer></script>
+    <script src="js/ui.js?v=1.4" defer></script>
+    <script src="js/catalog.js?v=1.4" defer></script>
+    <script src="js/cart.js?v=1.4" defer></script>
+    <script src="js/account.js?v=1.4" defer></script>
+    <script src="js/b2b.js?v=1.4" defer></script>
+    <script src="js/main.js?v=1.4" defer></script>
 </head>
 <body>
 
@@ -222,6 +222,280 @@
                 <p class="form-note" style="text-align:center;margin-top:22px">
                     قیمت‌ها مصوب سراسری است. خرید از نماینده شهر شما دارای تحویل سریع‌تر است؛ در ادامه خرید، نماینده شهر شما پیشنهاد می‌شود.
                 </p>
+            </div>
+        </section>
+
+        <!-- ================= صفحه اختصاصی جزئیات محصول ================= -->
+        <section id="page-product-detail" class="tab-content page pdp-page">
+            <div class="container">
+                <!-- دکمه بازگشت و مسیر نان‌ریزه -->
+                <div class="pdp-breadcrumb">
+                    <button class="btn btn-outline btn-sm" onclick="switchTab('products')" style="padding:6px 12px;font-size:12px">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        بازگشت به محصولات
+                    </button>
+                    <span class="bc-sep">/</span>
+                    <span class="bc-link" onclick="switchTab('home')">صفحه اصلی</span>
+                    <span class="bc-sep">/</span>
+                    <span class="bc-link" onclick="switchTab('products')">ویترین محصولات</span>
+                    <span class="bc-sep">/</span>
+                    <span class="bc-link" id="pdp-bc-cat" onclick="switchTab('products')">دسته‌بندی</span>
+                    <span class="bc-sep">/</span>
+                    <span class="bc-current" id="pdp-bc-title">نام محصول</span>
+                </div>
+
+                <!-- گرید اصلی ۳ ستونه جزئیات محصول -->
+                <div class="pdp-main-grid">
+                    <!-- ستون ۱: تصویر، گالری و ضمانت‌ها -->
+                    <div class="pdp-gallery-card">
+                        <div class="pdp-img-wrap">
+                            <img id="pdp-img" src="" alt="تصویر محصول" loading="lazy">
+                            <span class="pdp-badge-claim" id="pdp-claim-badge">گارانتی اصالت</span>
+                        </div>
+                        <div class="pdp-trust-badges">
+                            <div class="pdp-trust-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                <span>اصالت ۱۰۰٪ کالا</span>
+                            </div>
+                            <div class="pdp-trust-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                                <span>بسته‌بندی ایمن</span>
+                            </div>
+                            <div class="pdp-trust-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                                <span>۷ روز ضمانت برگشت</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ستون ۲: اطلاعات و معرفی کالا -->
+                    <div class="pdp-info-card">
+                        <div class="pdp-meta-row">
+                            <span class="pdp-cat-chip" id="pdp-cat">تجهیزات تخصصی</span>
+                            <span class="pdp-sku" id="pdp-sku">SKU: MNL-001</span>
+                        </div>
+
+                        <h1 class="pdp-title" id="pdp-title">عنوان محصول مانلی</h1>
+
+                        <!-- نوار امتیاز و دیدگاه‌ها به سبک دیجی‌کالا -->
+                        <div class="pdp-rating-row-digi">
+                            <div class="pdp-rating-badge" title="میانگین امتیاز خریداران">
+                                <svg viewBox="0 0 24 24" fill="#f59e0b" style="width:14px;height:14px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <span class="pdp-rating-num" id="pdp-rating">۴.۹</span>
+                                <span class="pdp-rating-count-pill" id="pdp-rating-count-pill">(۴۲)</span>
+                            </div>
+                            <span class="pdp-rating-divider">•</span>
+                            <button class="pdp-rating-link" onclick="goToPdpReviews()" type="button">
+                                <span id="pdp-reviews-link-text">۴۲ دیدگاه</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="pdp-rating-divider">•</span>
+                            <button class="pdp-rating-link" onclick="goToPdpReviews()" type="button">
+                                <span>پرسش‌ها</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- پیشنهاد خریداران به سبک دیجی‌کالا -->
+                        <div class="pdp-recommend-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:#10b981;flex-shrink:0"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                            <span><b id="pdp-recommend-pct">۹۴٪</b> از سالن‌داران و ناخن‌کاران خرید این محصول را پیشنهاد کرده‌اند</span>
+                        </div>
+
+                        <!-- مشخصات سریع -->
+                        <div class="pdp-quick-specs-grid" id="pdp-quick-specs">
+                            <!-- توسط JS پر می‌شود -->
+                        </div>
+
+                        <!-- معرفی اجمالی -->
+                        <div>
+                            <div class="pdp-features-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--c-rose)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                معرفی و بررسی تخصصی:
+                            </div>
+                            <p class="pdp-desc-text" id="pdp-description">
+                                توضیحات محصول در اینجا قرار می‌گیرد.
+                            </p>
+                        </div>
+
+                        <!-- ویژگی‌های برجسته با قابلیت مشاهده بیشتر/کمتر -->
+                        <div class="pdp-features-section">
+                            <div class="pdp-features-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--c-rose)"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                ویژگی‌ها و مزایای برجسته:
+                            </div>
+                            <div class="pdp-features-wrapper is-collapsed" id="pdp-features-wrapper">
+                                <ul class="pdp-features-list" id="pdp-features-list">
+                                    <!-- توسط JS پر می‌شود -->
+                                </ul>
+                                <div class="pdp-features-gradient"></div>
+                            </div>
+                            <div class="pdp-features-actions">
+                                <button class="pdp-features-toggle-btn" id="pdp-features-toggle-btn" type="button" onclick="togglePdpFeatures()">
+                                    <span id="pdp-features-toggle-text">مشاهده بیشتر</span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pdp-toggle-arrow"><polyline points="6 9 12 15 18 9"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ستون ۳: باکس خرید و سفارش (Buy Box) -->
+                    <div class="pdp-buybox-card">
+                        <div class="pdp-stock-status">
+                            <span class="pdp-stock-dot"></span>
+                            <span>موجود در انبار مانلی • آماده ارسال</span>
+                        </div>
+
+                        <div class="pdp-price-box">
+                            <span class="pdp-price-label">قیمت مصوب سراسری مانلی</span>
+                            <div class="pdp-price-val">
+                                <span id="pdp-price">۰</span>
+                                <small>تومان</small>
+                            </div>
+                        </div>
+
+                        <div class="pdp-actions-wrap">
+                            <div class="pdp-qty-row">
+                                <span class="pdp-qty-label">تعداد سفارش:</span>
+                                <div class="pdp-qty-picker">
+                                    <button class="pdp-qty-btn" type="button" onclick="changePdpQty(-1)">−</button>
+                                    <span class="pdp-qty-num" id="pdp-qty-val">۱</span>
+                                    <button class="pdp-qty-btn" type="button" onclick="changePdpQty(1)">+</button>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary pdp-btn-add" id="pdp-btn-add" onclick="addCurrentProductToCart()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                افزودن به سبد خرید
+                            </button>
+                        </div>
+
+                        <div class="pdp-rep-notice" id="pdp-rep-notice">
+                            <div class="pdp-rep-notice-head">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <span>تحویل سریع‌تر از نماینده محلی</span>
+                            </div>
+                            <p style="margin:0;font-size:11.5px;color:var(--c-muted)">
+                                در مرحله نهایی ثبت سفارش، نماینده رسمی مانلی در شهر شما به صورت هوشمند شناسایی و جهت تحویل فوری پیشنهاد خواهد شد.
+                            </p>
+                        </div>
+
+                        <div style="font-size:11.5px;color:var(--c-muted);display:grid;gap:6px;border-top:1px solid var(--c-line);padding-top:10px">
+                            <span>✓ ارسال با پست پیشتاز به سراسر ایران</span>
+                            <span>✓ گارانتی اصالت کالا و فاکتور رسمی مانلی</span>
+                            <span>✓ پشتیبانی تلفنی ویژه سالن‌ها و اساتید</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تب‌های مشخصات، راهنما و نظرات -->
+                <div class="pdp-details-tabs-card">
+                    <div class="pdp-tabs-nav">
+                        <button class="pdp-tab-btn active" data-pdptab="specs" onclick="switchPdpTab('specs')">
+                            مشخصات فنی و تکمیلی
+                        </button>
+                        <button class="pdp-tab-btn" data-pdptab="tips" onclick="switchPdpTab('tips')">
+                            نکات مصرف و راهنمای اساتید
+                        </button>
+                        <button class="pdp-tab-btn" data-pdptab="reviews" onclick="switchPdpTab('reviews')">
+                            نظرات و تجربیات همکاران
+                        </button>
+                    </div>
+
+                    <!-- تب مشخصات فنی -->
+                    <div class="pdp-tab-panel active" id="pdp-panel-specs">
+                        <table class="pdp-specs-table">
+                            <tbody id="pdp-specs-table-body">
+                                <!-- توسط JS پر می‌شود -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- تب راهنما و نکات اساتید -->
+                    <div class="pdp-tab-panel" id="pdp-panel-tips">
+                        <div class="pdp-tips-box">
+                            <div class="pdp-tips-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            </div>
+                            <div class="pdp-tips-content">
+                                <h4>توصیه اساتید مانلی برای بیشترین کارایی و طول عمر محصول:</h4>
+                                <p id="pdp-tips-text">نکات نگهداری و مصرف در اینجا قرار می‌گیرد.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تب نظرات و بازخوردها -->
+                    <div class="pdp-tab-panel" id="pdp-panel-reviews">
+                        <div class="pdp-reviews-grid">
+                            <div class="pdp-add-review-card">
+                                <h4 style="margin:0;font-size:14px;color:var(--c-dark)">ثبت نظر و تجربه کاری</h4>
+                                <p style="font-size:12px;color:var(--c-muted);margin:0">تجربه استفاده خود از این محصول را با سایر همکاران و هنرجویان به اشتراک بگذارید.</p>
+                                <div class="field" style="margin-bottom:8px">
+                                    <label>نام و نام خانوادگی / نام سالن</label>
+                                    <input type="text" id="pdp-new-review-name" placeholder="مثال: سمیرا نوری (سالن گل سرخ)" style="min-height:42px;padding:8px 12px">
+                                </div>
+                                <div class="field" style="margin-bottom:8px">
+                                    <label>متن دیدگاه</label>
+                                    <textarea id="pdp-new-review-text" rows="3" placeholder="کیفیت، ماندگاری و تجربه کار با محصول..." style="padding:8px 12px"></textarea>
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="submitPdpReview()">ارسال نظر</button>
+                            </div>
+
+                            <div id="pdp-reviews-list">
+                                <!-- نظرات پیش‌فرض -->
+                                <div class="pdp-review-card">
+                                    <div class="pdp-review-head">
+                                        <span class="pdp-review-author">مهشید رادمنش (ناخن‌کار و مدرس سالن نیلوفر)</span>
+                                        <span class="pdp-review-date">۲ هفته پیش</span>
+                                    </div>
+                                    <div class="pdp-review-body">
+                                        محصول واقعاً از نظر کیفیت و ثبات عالیه. نسبت به برندهای متفرقه بازار تفاوتش کاملاً مشخصه و به همه همکارانم پیشنهاد کردم.
+                                    </div>
+                                </div>
+                                <div class="pdp-review-card">
+                                    <div class="pdp-review-head">
+                                        <span class="pdp-review-author">الهام صبوری (تهران)</span>
+                                        <span class="pdp-review-date">۱ ماه پیش</span>
+                                    </div>
+                                    <div class="pdp-review-body">
+                                        بسته‌بندی پلمپ و اصالت کالا فوق‌العاده بود. ارسال هم خیلی سریع با نماینده هماهنگ شد. ممنون از تیم مانلی.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش محصولات مرتبط و مکمل -->
+                <div class="pdp-related-box">
+                    <div class="pdp-related-head">
+                        <h3>محصولات مکمل و مرتبط</h3>
+                        <p>سایر تجهیزات و مواد تخصصی که معمولاً همراه این محصول استفاده می‌شوند:</p>
+                    </div>
+                    <div class="products-grid" id="pdp-related-grid">
+                        <!-- توسط JS پر می‌شود -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- نوار چسبان خرید مخصوص موبایل (سبک دیجی‌کالا) -->
+            <div class="pdp-mobile-sticky-bar" id="pdp-mobile-sticky-bar">
+                <div class="pdp-mob-bar-inner">
+                    <button class="btn btn-primary pdp-mob-btn-add" type="button" onclick="addCurrentProductToCart()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                        <span>افزودن به سبد خرید</span>
+                    </button>
+                    <div class="pdp-mob-price-wrap">
+                        <span class="pdp-mob-stock-label">
+                            <span class="pdp-stock-dot"></span>
+                            موجود در انبار
+                        </span>
+                        <div class="pdp-mob-price-val">
+                            <span id="pdp-mob-price">۰</span>
+                            <small>تومان</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1469,10 +1743,6 @@
                     انصراف
                 </button>
             </div>
-        </div>
-    </div>
-                ثبت و ذخیره تغییرات
-            </button>
         </div>
     </div>
 

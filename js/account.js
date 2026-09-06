@@ -203,7 +203,12 @@ function switchProfileNav(tabId) {
         box.classList.remove('active');
     });
     const targetBox = $('sec-' + tabId);
-    if (targetBox) targetBox.classList.add('active');
+    if (targetBox) {
+        targetBox.classList.add('active');
+        if (window.innerWidth < 860) {
+            targetBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
 }
 
 function renderCustomerDashboard() {

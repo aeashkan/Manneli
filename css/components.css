@@ -63,11 +63,6 @@
     gap: 24px;
     align-items: flex-start;
 }
-@media (min-width: 840px) {
-    .checkout-grid {
-        grid-template-columns: 1.5fr 1fr;
-    }
-}
 .checkout-form-card {
     background: #fff;
     border: 1px solid var(--c-line);
@@ -81,8 +76,15 @@
     border-radius: var(--radius);
     padding: 24px;
     box-shadow: var(--shadow);
-    position: sticky;
-    top: 96px;
+}
+@media (min-width: 840px) {
+    .checkout-grid {
+        grid-template-columns: 1.5fr 1fr;
+    }
+    .checkout-summary-card {
+        position: sticky;
+        top: 96px;
+    }
 }
 .checkout-items-list {
     display: grid;
@@ -260,11 +262,6 @@
     gap: 22px;
     align-items: flex-start;
 }
-@media (min-width: 860px) {
-    .profile-layout {
-        grid-template-columns: 280px 1fr;
-    }
-}
 
 /* سایدبار حساب کاربری */
 .profile-sidebar {
@@ -273,8 +270,16 @@
     border-radius: var(--radius);
     padding: 20px 16px;
     box-shadow: var(--shadow);
-    position: sticky;
-    top: 96px;
+    position: static;
+}
+@media (min-width: 860px) {
+    .profile-layout {
+        grid-template-columns: 280px 1fr;
+    }
+    .profile-sidebar {
+        position: sticky;
+        top: 96px;
+    }
 }
 .profile-user-summary {
     display: flex;
@@ -877,6 +882,936 @@
     font-size: 12px;
     color: #2e7d32;
 }
+
+/* ============================================================
+   صفحه اختصاصی جزئیات محصول (Product Detail Page - PDP)
+   ============================================================ */
+.pdp-page {
+    padding-bottom: 60px;
+}
+
+/* مسیر راهنما (Breadcrumb) */
+.pdp-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--c-muted);
+    margin-bottom: 22px;
+    padding: 12px 18px;
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.pdp-breadcrumb a, .pdp-breadcrumb span.bc-link {
+    color: var(--c-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color .2s;
+}
+
+.pdp-breadcrumb a:hover, .pdp-breadcrumb span.bc-link:hover {
+    color: var(--c-rose);
+}
+
+.pdp-breadcrumb .bc-sep {
+    color: var(--c-line-dark);
+    font-size: 11px;
+}
+
+.pdp-breadcrumb .bc-current {
+    color: var(--c-dark);
+    font-weight: 700;
+}
+
+/* گرید اصلی جزئیات محصول */
+.pdp-main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: flex-start;
+    margin-bottom: 36px;
+}
+
+@media (min-width: 768px) {
+    .pdp-main-grid {
+        grid-template-columns: 340px 1fr;
+    }
+}
+
+@media (min-width: 1100px) {
+    .pdp-main-grid {
+        grid-template-columns: 380px 1fr 320px;
+    }
+}
+
+/* ستون عکس و گالری */
+.pdp-gallery-card {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pdp-img-wrap {
+    position: relative;
+    border-radius: calc(var(--radius) - 4px);
+    overflow: hidden;
+    background: var(--c-warm);
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pdp-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s cubic-bezier(.2,0,0,1);
+}
+
+.pdp-img-wrap:hover img {
+    transform: scale(1.06);
+}
+
+.pdp-badge-claim {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    color: var(--c-rose-deep);
+    border: 1px solid rgba(201,150,106,.4);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.pdp-trust-badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    border-top: 1px solid var(--c-line);
+    padding-top: 14px;
+}
+
+.pdp-trust-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--c-muted);
+}
+
+.pdp-trust-item svg {
+    width: 20px;
+    height: 20px;
+    color: var(--c-rose);
+}
+
+/* ستون مشخصات و محتوای کالا */
+.pdp-info-card {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.pdp-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pdp-cat-chip {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-gold);
+    background: rgba(201,150,106,.12);
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+.pdp-sku {
+    font-size: 12px;
+    color: var(--c-muted);
+    font-family: monospace;
+    letter-spacing: .5px;
+}
+
+.pdp-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--c-dark);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.pdp-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--c-muted);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--c-line);
+}
+
+.pdp-stars {
+    color: #f59e0b;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.pdp-rating-score {
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+.pdp-quick-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    background: var(--c-warm);
+    border: 1px solid var(--c-line);
+    border-radius: calc(var(--radius) - 2px);
+    padding: 14px;
+}
+
+.pdp-quick-spec-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+}
+
+.pdp-quick-spec-item b {
+    color: var(--c-dark);
+    white-space: nowrap;
+}
+
+.pdp-quick-spec-item span {
+    color: var(--c-muted);
+}
+
+.pdp-desc-text {
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--c-text);
+    text-align: justify;
+}
+
+.pdp-features-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pdp-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pdp-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--c-text);
+}
+
+.pdp-features-list li svg {
+    width: 16px;
+    height: 16px;
+    color: #10b981;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+/* ستون سایدبار خرید (Buy Box) */
+.pdp-buybox-card {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (min-width: 1100px) {
+    .pdp-buybox-card {
+        position: sticky;
+        top: 96px;
+    }
+}
+
+.pdp-stock-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #059669;
+    padding: 8px 12px;
+    background: #ecfdf5;
+    border-radius: 8px;
+    border: 1px solid #a7f3d0;
+}
+
+.pdp-stock-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    position: relative;
+}
+
+.pdp-stock-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.4);
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+.pdp-price-box {
+    border-top: 1px solid var(--c-line);
+    border-bottom: 1px solid var(--c-line);
+    padding: 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pdp-price-label {
+    font-size: 12px;
+    color: var(--c-muted);
+}
+
+.pdp-price-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--c-rose-deep);
+    font-family: var(--font-body);
+}
+
+.pdp-price-val small {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-muted);
+    margin-right: 4px;
+}
+
+/* کنترل تعداد و دکمه خرید */
+.pdp-actions-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pdp-qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--c-warm);
+    border: 1px solid var(--c-line);
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.pdp-qty-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--c-text);
+}
+
+.pdp-qty-picker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pdp-qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--c-line);
+    background: #fff;
+    color: var(--c-dark);
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.pdp-qty-btn:hover {
+    background: var(--c-rose);
+    color: #fff;
+    border-color: var(--c-rose);
+}
+
+.pdp-qty-num {
+    font-size: 15px;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+}
+
+.pdp-btn-add {
+    width: 100%;
+    min-height: 48px;
+    font-size: 15px;
+    font-weight: 700;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(201,150,106,.3);
+}
+
+.pdp-rep-notice {
+    background: rgba(201,150,106,.1);
+    border: 1px dashed rgba(201,150,106,.45);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--c-text);
+}
+
+.pdp-rep-notice-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--c-rose-deep);
+    margin-bottom: 4px;
+}
+
+.pdp-rep-notice-head svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* تب‌های تخصصی صفحه محصول */
+.pdp-details-tabs-card {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 36px;
+}
+
+.pdp-tabs-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid var(--c-line);
+    margin-bottom: 24px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.pdp-tab-btn {
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: color .2s;
+}
+
+.pdp-tab-btn:hover {
+    color: var(--c-rose);
+}
+
+.pdp-tab-btn.active {
+    color: var(--c-rose-deep);
+}
+
+.pdp-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    left: 0;
+    height: 3px;
+    background: var(--c-rose);
+    border-radius: 3px 3px 0 0;
+}
+
+.pdp-tab-panel {
+    display: none;
+}
+
+.pdp-tab-panel.active {
+    display: block;
+    animation: fadeIn .3s ease;
+}
+
+/* جدول مشخصات فنی */
+.pdp-specs-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.pdp-specs-table tr {
+    border-bottom: 1px solid var(--c-line);
+}
+
+.pdp-specs-table tr:nth-child(even) {
+    background: var(--c-warm);
+}
+
+.pdp-specs-table th {
+    width: 220px;
+    padding: 14px 16px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--c-dark);
+    vertical-align: middle;
+}
+
+.pdp-specs-table td {
+    padding: 14px 16px;
+    color: var(--c-text);
+    line-height: 1.7;
+    vertical-align: middle;
+}
+
+@media (max-width: 640px) {
+    .pdp-specs-table th {
+        width: 120px;
+        padding: 10px 12px;
+        font-size: 12.5px;
+    }
+    .pdp-specs-table td {
+        padding: 10px 12px;
+        font-size: 12.5px;
+    }
+}
+
+/* باکس نکات اساتید مانلی */
+.pdp-tips-box {
+    background: #fff8f0;
+    border: 1px solid #fed7aa;
+    border-right: 4px solid var(--c-rose);
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.pdp-tips-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(201,150,106,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c-rose-deep);
+    flex-shrink: 0;
+}
+
+.pdp-tips-content h4 {
+    margin: 0 0 6px;
+    font-size: 14.5px;
+    color: var(--c-dark);
+}
+
+.pdp-tips-content p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--c-text);
+}
+
+/* بخش دیدگاه‌ها و نظرات */
+.pdp-reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 860px) {
+    .pdp-reviews-grid {
+        grid-template-columns: 320px 1fr;
+    }
+}
+
+.pdp-add-review-card {
+    background: var(--c-warm);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pdp-review-card {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pdp-review-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.pdp-review-author {
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+.pdp-review-date {
+    font-size: 11.5px;
+    color: var(--c-muted);
+}
+
+.pdp-review-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--c-text);
+}
+
+/* بخش محصولات مرتبط */
+.pdp-related-box {
+    margin-top: 40px;
+}
+
+.pdp-related-head {
+    margin-bottom: 20px;
+}
+
+.pdp-related-head h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0 0 6px;
+}
+
+.pdp-related-head p {
+    font-size: 13px;
+    color: var(--c-muted);
+    margin: 0;
+}
+
+/* استایل بهبودیافته کارت محصول در ویترین */
+.product-card {
+    cursor: pointer;
+}
+
+.product-card .product-title {
+    transition: color .2s;
+}
+
+.product-card:hover .product-title {
+    color: var(--c-rose);
+}
+
+/* ==========================================================================
+   طراحی مدرن جزئیات محصول (سبک دیجی‌کالا و استانداردهای لوکس بیوتی)
+   ========================================================================== */
+
+/* نوار امتیاز و دیدگاه‌ها */
+.pdp-rating-row-digi {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.pdp-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #b45309;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.pdp-rating-badge svg {
+    color: #f59e0b;
+}
+
+.pdp-rating-count-pill {
+    font-size: 11.5px;
+    color: #92400e;
+    font-weight: 600;
+}
+
+.pdp-rating-divider {
+    color: var(--c-line);
+    font-size: 12px;
+    user-select: none;
+}
+
+.pdp-rating-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 12.5px;
+    color: var(--c-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: inherit;
+    transition: color .2s;
+}
+
+.pdp-rating-link:hover {
+    color: var(--c-rose-deep);
+}
+
+/* باکس پیشنهاد خریداران */
+.pdp-recommend-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #166534;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.pdp-recommend-box b {
+    font-weight: 800;
+    color: #15803d;
+}
+
+/* ویژگی‌های برجسته با قابلیت باز و بسته شدن */
+.pdp-features-section {
+    background: #fcfcfc;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-top: 20px;
+}
+
+.pdp-features-wrapper {
+    position: relative;
+    transition: max-height .35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.pdp-features-wrapper.is-collapsed {
+    max-height: 108px;
+}
+
+.pdp-features-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
+    background: linear-gradient(to bottom, rgba(252, 252, 252, 0), rgba(252, 252, 252, 0.95) 75%, #fcfcfc 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+
+.pdp-features-wrapper.is-collapsed .pdp-features-gradient {
+    opacity: 1;
+}
+
+.pdp-features-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--c-line);
+}
+
+.pdp-features-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-rose-deep);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+    font-family: inherit;
+    transition: all .2s;
+}
+
+.pdp-features-toggle-btn:hover {
+    color: var(--c-rose);
+    gap: 8px;
+}
+
+.pdp-toggle-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform .25s ease;
+}
+
+.pdp-features-toggle-btn.is-expanded .pdp-toggle-arrow {
+    transform: rotate(180deg);
+}
+
+/* نوار چسبان خرید مخصوص موبایل (Sticky Bottom Purchase Bar) */
+.pdp-mobile-sticky-bar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* افزودن فاصله از پایین صفحه برای جلوگیری از هم‌پوشانی با نوار چسبان */
+    #page-product-detail.tab-content {
+        padding-bottom: 95px !important;
+    }
+
+    .pdp-mobile-sticky-bar {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 120;
+        background: #ffffff;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        padding: 10px 16px;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+        animation: pdpStickySlideUp .25s ease-out;
+    }
+
+    @keyframes pdpStickySlideUp {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .pdp-mob-bar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        max-width: 540px;
+        margin: 0 auto;
+    }
+
+    .pdp-mob-btn-add {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 46px;
+        font-size: 13.5px;
+        font-weight: 800;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28);
+        white-space: nowrap;
+    }
+
+    .pdp-mob-price-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        min-width: 100px;
+    }
+
+    .pdp-mob-stock-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10.5px;
+        color: #059669;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+
+    .pdp-mob-price-val {
+        display: flex;
+        align-items: baseline;
+        gap: 3px;
+        font-size: 17px;
+        font-weight: 900;
+        color: var(--c-dark);
+        line-height: 1;
+    }
+
+    .pdp-mob-price-val small {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--c-muted);
+    }
+}
+
 
 
 
