@@ -692,26 +692,191 @@
     padding: 18px 20px;
     margin-bottom: 14px;
     position: relative;
+    transition: all 0.2s ease;
+}
+.address-card-pro:hover {
+    border-color: rgba(224, 76, 122, 0.4);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+}
+.address-card-pro.is-default {
+    border-color: var(--c-rose);
+    background: linear-gradient(180deg, #fff 0%, #fffbfd 100%);
+}
+.address-head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 .address-card-pro h4 {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 14.5px;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--c-dark);
 }
-.address-card-pro p {
-    font-size: 13px;
+.address-card-pro p.addr-text {
+    font-size: 13.5px;
     color: var(--c-text);
     line-height: 1.8;
-    margin-bottom: 10px;
+    margin: 8px 0 10px;
+}
+.address-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.address-action-btn {
+    background: #fff;
+    border: 1px solid var(--c-line);
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    font-family: inherit;
+    color: var(--c-text);
+}
+.address-action-btn.edit {
+    color: var(--c-rose-deep);
+    border-color: rgba(224, 76, 122, 0.3);
+}
+.address-action-btn.edit:hover {
+    background: #fdf2f4;
+    border-color: var(--c-rose);
+}
+.address-action-btn.delete {
+    color: #c62828;
+    border-color: rgba(198, 40, 40, 0.25);
+}
+.address-action-btn.delete:hover {
+    background: #ffebee;
+}
+.address-action-btn.default-tag {
+    color: #2e7d32;
+    background: #e8f5e9;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: default;
+    border-color: #c8e6c9;
+}
+.address-action-btn.set-default {
+    color: var(--c-muted);
+}
+.address-action-btn.set-default:hover {
+    color: var(--c-dark);
+    border-color: var(--c-muted);
 }
 .address-meta {
     display: flex;
     gap: 18px;
-    font-size: 12px;
+    font-size: 12.5px;
+    color: var(--c-muted);
+    flex-wrap: wrap;
+    border-top: 1px dashed var(--c-line);
+    padding-top: 10px;
+    margin-top: 8px;
+}
+
+/* ============ انتخاب آدرس در مرحله نهایی خرید (چک‌اوت) ============ */
+.checkout-addresses-grid {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.checkout-address-card {
+    background: #fff;
+    border: 1.5px solid var(--c-line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    position: relative;
+}
+.checkout-address-card:hover {
+    border-color: var(--c-rose);
+    background: rgba(245, 238, 228, 0.3);
+}
+.checkout-address-card.selected {
+    border-color: var(--c-rose);
+    background: linear-gradient(180deg, #ffffff 0%, #fff8fa 100%);
+    box-shadow: 0 4px 14px rgba(224, 76, 122, 0.08);
+}
+.checkout-address-radio {
+    margin-top: 4px;
+    accent-color: var(--c-rose-deep);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+.checkout-address-content {
+    flex: 1;
+}
+.checkout-address-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.checkout-address-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.checkout-address-title .badge-default {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+.checkout-address-recipient {
+    font-size: 12.5px;
     color: var(--c-muted);
 }
+.checkout-address-body {
+    font-size: 13px;
+    color: var(--c-text);
+    line-height: 1.7;
+    margin-bottom: 6px;
+}
+.checkout-address-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--c-muted);
+    flex-wrap: wrap;
+}
+.checkout-new-addr-banner {
+    background: rgba(46, 125, 50, 0.08);
+    border: 1px dashed rgba(46, 125, 50, 0.3);
+    border-radius: 9px;
+    padding: 8px 12px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #2e7d32;
+}
+
 
 

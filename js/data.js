@@ -126,7 +126,19 @@ let registeredUsers = [
         password: "123",
         city: "تهران",
         zip: "1987654321",
-        address: "تهران، زعفرانیه، خیابان اعجازی، پلاک ۱۲"
+        address: "زعفرانیه، خیابان اعجازی، پلاک ۱۲، زنگ ۲",
+        addresses: [
+            {
+                id: 1,
+                title: "منزل (پیش‌فرض)",
+                recipientName: "نازنین احمدی",
+                recipientPhone: "09123456789",
+                city: "تهران",
+                zip: "1987654321",
+                address: "زعفرانیه، خیابان اعجازی، پلاک ۱۲، زنگ ۲",
+                isDefault: true
+            }
+        ]
     },
     {
         name: "سارا محمدی",
@@ -139,7 +151,19 @@ let registeredUsers = [
         password: "123",
         city: "اصفهان",
         zip: "8134567890",
-        address: "اصفهان، چهارباغ بالا، کوچه بهار، پلاک ۴"
+        address: "چهارباغ بالا، کوچه بهار، پلاک ۴",
+        addresses: [
+            {
+                id: 1,
+                title: "سالن زیبایی مانلی (پیش‌فرض)",
+                recipientName: "سارا محمدی",
+                recipientPhone: "09121112233",
+                city: "اصفهان",
+                zip: "8134567890",
+                address: "چهارباغ بالا، کوچه بهار، پلاک ۴",
+                isDefault: true
+            }
+        ]
     }
 ];
 

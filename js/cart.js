@@ -77,6 +77,9 @@ function updateCartRepSuggest() {
 }
 
 // ---------- چک‌اوت و صفحه تکمیل اطلاعات ----------
+let selectedCheckoutAddressId = null;
+let checkoutAddressMode = 'saved'; // 'saved' or 'new'
+
 function triggerCheckout() {
     if (cart.length === 0) {
         showAlert('سبد خرید شما خالی است.', 'warning');
@@ -104,16 +107,39 @@ function triggerCheckout() {
 function renderCheckoutPage() {
     if (!currentUser) return;
 
-    // پر کردن فیلدهای گیرنده از روی اطلاعات کاربر
-    $('co-name').value = currentUser.name || '';
-    $('co-phone').value = currentUser.phone || '';
-    if (currentUser.city) {
-        const citySelect = $('co-city');
-        const hasOption = Array.from(citySelect.options).some(o => o.value === currentUser.city);
-        citySelect.value = hasOption ? currentUser.city : 'سایر';
+    const userAddresses = getUserAddresses(currentUser);
+    const savedWrap = $('checkout-saved-addresses-wrap');
+    const newWrap = $('checkout-new-address-wrap');
+    const newHeader = $('checkout-new-address-header');
+
+    if (userAddresses && userAddresses.length > 0) {
+        checkoutAddressMode = 'saved';
+        if (savedWrap) savedWrap.style.display = 'block';
+        if (newWrap) newWrap.style.display = 'none';
+        if (newHeader) newHeader.style.display = 'flex';
+
+        // انتخاب آدرس پیش‌فرض یا اولین آدرس
+        let defaultAddr = userAddresses.find(a => a.id === selectedCheckoutAddressId)
+                       || userAddresses.find(a => a.isDefault)
+                       || userAddresses[0];
+        selectedCheckoutAddressId = defaultAddr.id;
+
+        renderCheckoutSavedAddresses(userAddresses);
+        selectCheckoutAddress(selectedCheckoutAddressId);
+    } else {
+        checkoutAddressMode = 'new';
+        if (savedWrap) savedWrap.style.display = 'none';
+        if (newWrap) newWrap.style.display = 'block';
+        if (newHeader) newHeader.style.display = 'none'; // چون آدرس ذخیره‌ای نیست دکمه بازگشت نمایش داده نمی‌شود
+
+        // پر کردن فیلدها از روی اطلاعات موجود کاربر
+        $('co-name').value = currentUser.name || (currentUser.firstName ? currentUser.firstName + ' ' + (currentUser.lastName || '') : '');
+        $('co-phone').value = currentUser.phone || '';
+        $('co-city').value = currentUser.city || '';
+        $('co-zip').value = currentUser.zip || '';
+        $('co-address').value = currentUser.address || '';
+        onCheckoutCityChange();
     }
-    $('co-zip').value = currentUser.zip || '';
-    $('co-address').value = currentUser.address || '';
 
     // رندر اقلام در پیش‌فاکتور
     const itemsList = $('checkout-items-list');
@@ -133,13 +159,95 @@ function renderCheckoutPage() {
     const total = cartTotal();
     $('co-subtotal').innerText = faNum(total) + ' تومان';
     $('co-grand-total').innerText = faNum(total) + ' تومان';
-
-    // بررسی نماینده برای شهر انتخابی
-    onCheckoutCityChange();
 }
 
-function onCheckoutCityChange() {
-    const city = $('co-city').value;
+function renderCheckoutSavedAddresses(addresses) {
+    const list = $('checkout-addresses-list');
+    if (!list) return;
+
+    list.innerHTML = addresses.map(addr => {
+        const isSelected = addr.id === selectedCheckoutAddressId;
+        return `
+            <div class="checkout-address-card ${isSelected ? 'selected' : ''}" id="co-addr-card-${addr.id}" onclick="selectCheckoutAddress(${addr.id})">
+                <input type="radio" name="co-selected-addr" class="checkout-address-radio" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); selectCheckoutAddress(${addr.id})">
+                <div class="checkout-address-content">
+                    <div class="checkout-address-head">
+                        <div class="checkout-address-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--c-rose)"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>${addr.title || 'آدرس تحویل'}</span>
+                            ${addr.isDefault ? '<span class="badge-default">پیش‌فرض</span>' : ''}
+                        </div>
+                        <div class="checkout-address-recipient">
+                            تحویل‌گیرنده: <b>${addr.recipientName || currentUser.name || '—'}</b> (${addr.recipientPhone || currentUser.phone || '—'})
+                        </div>
+                    </div>
+                    <div class="checkout-address-body">
+                        ${addr.city}، ${addr.address}
+                    </div>
+                    <div class="checkout-address-meta">
+                        <span>کد پستی: ${addr.zip || '—'}</span>
+                        <span>شهر: ${addr.city}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function selectCheckoutAddress(addrId) {
+    selectedCheckoutAddressId = addrId;
+    checkoutAddressMode = 'saved';
+
+    const userAddresses = getUserAddresses(currentUser);
+    const addr = userAddresses.find(a => a.id === addrId);
+
+    // به‌روزرسانی کارت‌ها و رادیوها
+    userAddresses.forEach(a => {
+        const card = $(`co-addr-card-${a.id}`);
+        if (card) {
+            const isSel = a.id === addrId;
+            card.classList.toggle('selected', isSel);
+            const radio = card.querySelector('input[type="radio"]');
+            if (radio) radio.checked = isSel;
+        }
+    });
+
+    if (addr) {
+        // تنظیم شهر جهت بررسی نماینده
+        const citySelect = $('co-city');
+        if (citySelect) {
+            const hasOption = Array.from(citySelect.options).some(o => o.value === addr.city);
+            citySelect.value = hasOption ? addr.city : 'سایر';
+        }
+        onCheckoutCityChange(addr.city);
+    }
+}
+
+function showNewAddressFormInCheckout() {
+    checkoutAddressMode = 'new';
+    $('checkout-saved-addresses-wrap').style.display = 'none';
+    $('checkout-new-address-wrap').style.display = 'block';
+    const newHeader = $('checkout-new-address-header');
+    if (newHeader) newHeader.style.display = 'flex';
+
+    // مقادیر پیش‌فرض گیرنده
+    $('co-name').value = currentUser.name || (currentUser.firstName ? currentUser.firstName + ' ' + (currentUser.lastName || '') : '');
+    $('co-phone').value = currentUser.phone || '';
+    $('co-city').value = '';
+    $('co-zip').value = '';
+    $('co-address').value = '';
+    onCheckoutCityChange('');
+}
+
+function backToSavedAddressesInCheckout() {
+    checkoutAddressMode = 'saved';
+    $('checkout-saved-addresses-wrap').style.display = 'block';
+    $('checkout-new-address-wrap').style.display = 'none';
+    selectCheckoutAddress(selectedCheckoutAddressId);
+}
+
+function onCheckoutCityChange(cityParam) {
+    const city = cityParam !== undefined ? cityParam : $('co-city').value;
     const rep = findRepForCity(city);
     const banner = $('checkout-rep-banner');
     const optRep = $('opt-shipping-rep');
@@ -167,21 +275,75 @@ function updateShippingMethodUI() {
 }
 
 function finalizeCheckoutOrder() {
-    const name = $('co-name').value.trim();
-    const phone = $('co-phone').value.trim();
-    const city = $('co-city').value;
-    const zip = $('co-zip').value.trim();
-    const address = $('co-address').value.trim();
-    const notes = $('co-notes').value.trim();
+    if (!currentUser) return;
 
-    if (!name || !phone || !city || !zip || !address) {
-        showAlert('لطفاً مشخصات و آدرس پستی را به طور کامل تکمیل نمایید.', 'warning');
-        return;
-    }
+    let name = '';
+    let phone = '';
+    let city = '';
+    let zip = '';
+    let address = '';
+    const notes = ($('co-notes').value || '').trim();
 
-    if (phone.replace(/\D/g, '').length < 10) {
-        showAlert('شماره تماس وارد شده معتبر نیست.', 'warning');
-        return;
+    if (checkoutAddressMode === 'saved') {
+        const userAddresses = getUserAddresses(currentUser);
+        const selectedAddr = userAddresses.find(a => a.id === selectedCheckoutAddressId) || userAddresses[0];
+        if (!selectedAddr) {
+            showAlert('لطفاً یک آدرس را برای تحویل سفارش انتخاب نمایید.', 'warning');
+            return;
+        }
+        name = selectedAddr.recipientName || currentUser.name || '';
+        phone = selectedAddr.recipientPhone || currentUser.phone || '';
+        city = selectedAddr.city || '';
+        zip = selectedAddr.zip || '';
+        address = selectedAddr.address || '';
+    } else {
+        // حالت آدرس جدید (اگر آدرس ذخیره‌شده نبود یا کاربر آدرس جدید وارد کرد)
+        name = $('co-name').value.trim();
+        phone = $('co-phone').value.trim();
+        city = $('co-city').value;
+        zip = $('co-zip').value.trim();
+        address = $('co-address').value.trim();
+
+        if (!name || !phone || !city || !zip || !address) {
+            showAlert('لطفاً مشخصات و آدرس پستی را به طور کامل تکمیل نمایید.', 'warning');
+            return;
+        }
+
+        if (phone.replace(/\D/g, '').length < 10) {
+            showAlert('شماره تماس وارد شده معتبر نیست.', 'warning');
+            return;
+        }
+
+        // ذخیره آدرس جدید در دفترچه آدرس‌های کاربر
+        const userAddresses = getUserAddresses(currentUser);
+        const newAddr = {
+            id: Date.now(),
+            title: `آدرس تحویل ${city ? `(${city})` : ''}`,
+            recipientName: name,
+            recipientPhone: phone,
+            city: city,
+            zip: zip,
+            address: address,
+            isDefault: userAddresses.length === 0
+        };
+        userAddresses.push(newAddr);
+
+        // همگام‌سازی با registeredUsers
+        const userInDb = registeredUsers.find(u => u.phone === currentUser.phone);
+        if (userInDb) {
+            if (!Array.isArray(userInDb.addresses)) userInDb.addresses = [];
+            userInDb.addresses = [...userAddresses];
+            if (newAddr.isDefault) {
+                userInDb.city = city;
+                userInDb.zip = zip;
+                userInDb.address = address;
+            }
+        }
+        if (newAddr.isDefault) {
+            currentUser.city = city;
+            currentUser.zip = zip;
+            currentUser.address = address;
+        }
     }
 
     const shippingMethod = document.querySelector('input[name="shipping-method"]:checked')?.value || 'direct';
@@ -220,13 +382,6 @@ function finalizeCheckoutOrder() {
             { title: 'تحویل نهایی مرسوله', time: 'در انتظار ارسال', done: false }
         ]
     });
-
-    // به‌روزرسانی اطلاعات کاربر
-    currentUser.name = name;
-    currentUser.phone = phone;
-    currentUser.city = city;
-    currentUser.zip = zip;
-    currentUser.address = address;
 
     // خالی کردن سبد
     cart = [];
