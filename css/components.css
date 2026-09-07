@@ -4,10 +4,11 @@
 .drawer {
     position: fixed; top: 0; bottom: 0; left: 0; width: min(430px, 100%);
     background: var(--c-cream); z-index: 210;
-    transform: translateX(-105%); transition: transform .3s ease;
+    transform: translateX(-105%); transition: transform .3s ease, visibility .3s ease;
     display: flex; flex-direction: column; box-shadow: var(--shadow-lg);
+    visibility: hidden;
 }
-.drawer.show { transform: translateX(0); }
+.drawer.show { transform: translateX(0); visibility: visible; }
 .drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--c-line); }
 .drawer-head h3 { font-size: 16px; }
 .drawer-head button { color: var(--c-muted); display: flex; }

@@ -1,10 +1,28 @@
 /* ============================================================
    MANNELI — Design System (طبق گزارش بازطراحی ۱۴۰۴/۰۵)
    55–60% روشن / قهوه‌ای فقط در هدر، هیرو و فوتر
-   تایپوگرافی: Estedad (تیتر) + Vazirmatn (متن)
+   تایپوگرافی: دانا (متن و منو) + مربا (تیترها) + فونت انگلیسی (لوگو)
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;700;800&display=swap');
+
+@font-face {
+    font-family: 'Dana';
+    src: url('../fonts/Dana-Medium.ttf') format('truetype'),
+         url('../Fonts/Dana-Medium.ttf') format('truetype');
+    font-weight: 400 500 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Morabba';
+    src: url('../fonts/Morabba-SemiBold.ttf') format('truetype'),
+         url('../Fonts/Morabba-SemiBold.ttf') format('truetype');
+    font-weight: 600 700;
+    font-style: normal;
+    font-display: swap;
+}
 
 :root {
     /* پالت رنگی */
@@ -22,8 +40,9 @@
     --c-pin:       #C0392B;  /* قرمز مهرهٔ موقعیت روی نقشه */
 
     /* تایپوگرافی */
-    --font-head: 'Estedad', 'Vazirmatn', sans-serif;
-    --font-body: 'Vazirmatn', sans-serif;
+    --font-head: 'Morabba', 'Dana', 'Estedad', sans-serif;
+    --font-body: 'Dana', 'Vazirmatn', sans-serif;
+    --font-logo: 'Estedad', system-ui, -apple-system, sans-serif;
 
     /* فاصله‌گذاری */
     --sp-1: 6px; --sp-2: 10px; --sp-3: 16px; --sp-4: 24px; --sp-5: 40px; --sp-6: 64px;
@@ -35,7 +54,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
 
 body {
     font-family: var(--font-body);
@@ -47,6 +69,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 h1, h2, h3, h4, .head-font { font-family: var(--font-head); line-height: 1.5; }
@@ -61,7 +85,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 input, select, textarea { font-family: inherit; font-size: 14px; color: var(--c-text); }
 a { color: inherit; text-decoration: none; }
 
-.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+.ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; font-family: var(--font-logo); }
 .text-muted { color: var(--c-muted); }
 
 /* ============ کانتینر ============ */
@@ -122,12 +146,34 @@ a { color: inherit; text-decoration: none; }
 @media (min-width: 768px) { .header-inner { height: 76px; } }
 
 .logo { display: flex; flex-direction: column; line-height: 1.15; cursor: pointer; }
+.site-logo-img {
+    height: 38px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+    display: block;
+    transition: opacity .2s ease, transform .2s ease;
+}
+.footer-logo-img {
+    height: 44px;
+    max-width: 160px;
+}
+.logo:hover .site-logo-img {
+    opacity: .9;
+    transform: scale(1.02);
+}
+@media (min-width: 768px) {
+    .site-logo-img {
+        height: 46px;
+        max-width: 170px;
+    }
+}
 .logo-main {
-    font-family: var(--font-head); font-weight: 700;
+    font-family: var(--font-logo); font-weight: 700;
     font-size: 22px; letter-spacing: .28em; color: var(--c-gold);
 }
 @media (min-width: 768px) { .logo-main { font-size: 26px; } }
-.logo-sub { font-size: 8px; letter-spacing: .3em; color: var(--c-rose); font-weight: 600; text-transform: uppercase; }
+.logo-sub { font-family: var(--font-logo); font-size: 8px; letter-spacing: .3em; color: var(--c-rose); font-weight: 600; text-transform: uppercase; }
 
 .main-nav { display: none; }
 @media (min-width: 1100px) {
@@ -204,7 +250,7 @@ a { color: inherit; text-decoration: none; }
 .hero-grid { display: grid; gap: 40px; align-items: center; }
 @media (min-width: 992px) { .hero-grid { grid-template-columns: 1.15fr .85fr; gap: 56px; } }
 .hero h1 { color: var(--c-cream); margin: 18px 0 16px; }
-.hero h1 .brand-word { color: var(--c-gold); letter-spacing: .08em; }
+.hero h1 .brand-word { font-family: var(--font-logo); color: var(--c-gold); letter-spacing: .08em; }
 .hero-lead { color: rgba(245,238,228,.72); font-size: 15.5px; max-width: 580px; margin-bottom: 28px; }
 .hero-cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .hero-cta-row .btn-link { border-color: rgba(245,238,228,.3); color: rgba(245,238,228,.6); }
@@ -219,7 +265,7 @@ a { color: inherit; text-decoration: none; }
     border-radius: 26px;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg), 0 0 35px rgba(201,150,106,.08);
 }
 .hero-gem-inner {
     position: absolute; inset: 16px;
@@ -229,6 +275,26 @@ a { color: inherit; text-decoration: none; }
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     text-align: center; padding: 24px;
+}
+.hero-logo-glow {
+    position: absolute;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,150,106,.24) 0%, rgba(44,36,26,0) 70%);
+    pointer-events: none;
+    animation: gemPulse 3.2s ease-in-out infinite;
+}
+.hero-logo-img {
+    position: relative;
+    width: 88%;
+    max-width: 310px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 28px rgba(0,0,0,.6));
+    transition: transform .3s ease;
+}
+.hero-gem-card:hover .hero-logo-img {
+    transform: scale(1.04);
 }
 .hero-gem-emblem {
     width: 80px; height: 80px; margin-bottom: 22px;
