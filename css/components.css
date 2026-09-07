@@ -2472,25 +2472,313 @@
 }
 [data-theme="light"] .reps-map-wrap,
 [data-theme="light"] .dashboard-card,
-[data-theme="light"] .order-history-card,
-[data-theme="light"] .pdp-breadcrumb,
-[data-theme="light"] .prod-detail-main,
-[data-theme="light"] .prod-detail-spec,
-[data-theme="light"] .prod-review-summary-box {
+[data-theme="light"] .order-history-card {
     background: #352B21;
     border-color: rgba(245, 238, 228, 0.12);
     color: #F5EEE4;
 }
+
+/* ==========================================================================
+   استایل‌های صفحه جزئیات محصول (PDP) در تم لایت مانلی
+   ========================================================================== */
+
+/* نوار مسیر و بازگشت */
+[data-theme="light"] .pdp-breadcrumb {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.14);
+    color: #F5EEE4;
+}
+[data-theme="light"] .pdp-breadcrumb .btn-outline {
+    border-color: rgba(245, 238, 228, 0.25);
+    color: #F5EEE4;
+}
+[data-theme="light"] .pdp-breadcrumb .btn-outline:hover {
+    background: rgba(245, 238, 228, 0.1);
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-breadcrumb .bc-sep {
+    color: rgba(245, 238, 228, 0.35);
+}
+[data-theme="light"] .pdp-breadcrumb .bc-link {
+    color: rgba(245, 238, 228, 0.7);
+}
+[data-theme="light"] .pdp-breadcrumb .bc-link:hover {
+    color: var(--c-rose);
+}
+[data-theme="light"] .pdp-breadcrumb .bc-current {
+    color: #FAF6F0;
+}
+
+/* ستون گالری و عکس */
+[data-theme="light"] .pdp-gallery-card {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.14);
+    color: #F5EEE4;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+[data-theme="light"] .pdp-img-wrap {
+    background: #2C241A;
+    border: 1px solid rgba(245, 238, 228, 0.08);
+}
+[data-theme="light"] .pdp-trust-badges {
+    border-top-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .pdp-trust-item {
+    color: rgba(245, 238, 228, 0.85);
+}
+[data-theme="light"] .pdp-trust-item svg {
+    color: var(--c-rose);
+}
+
+/* ستون اطلاعات و معرفی کالا */
+[data-theme="light"] .pdp-info-card {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.14);
+    color: #F5EEE4;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+[data-theme="light"] .pdp-cat-chip {
+    background: rgba(201, 150, 106, 0.18);
+    color: #e8ba95;
+    border: 1px solid rgba(201, 150, 106, 0.3);
+}
+[data-theme="light"] .pdp-sku {
+    color: rgba(245, 238, 228, 0.55);
+}
 [data-theme="light"] .pdp-title {
+    color: #FAF6F0;
+}
+
+/* نوار امتیاز و دیدگاه‌ها دیجی‌کالایی */
+[data-theme="light"] .pdp-rating-badge {
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.35);
+    color: #fcd34d;
+}
+[data-theme="light"] .pdp-rating-count-pill {
+    color: #fef08a;
+}
+[data-theme="light"] .pdp-rating-divider {
+    color: rgba(245, 238, 228, 0.25);
+}
+[data-theme="light"] .pdp-rating-link {
+    color: rgba(245, 238, 228, 0.7);
+}
+[data-theme="light"] .pdp-rating-link:hover {
+    color: var(--c-rose);
+}
+
+/* باکس پیشنهاد خریداران */
+[data-theme="light"] .pdp-recommend-box {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.28);
+    color: #a7f3d0;
+}
+[data-theme="light"] .pdp-recommend-box b {
+    color: #6ee7b7;
+}
+
+/* مشخصات سریع */
+[data-theme="light"] .pdp-quick-specs-grid {
+    background: #2D2319;
+    border: 1px solid rgba(245, 238, 228, 0.1);
+}
+[data-theme="light"] .pdp-quick-spec-item {
+    background: transparent;
+}
+[data-theme="light"] .pdp-quick-spec-label {
+    color: rgba(245, 238, 228, 0.6);
+}
+[data-theme="light"] .pdp-quick-spec-val {
+    color: #FAF6F0;
+}
+
+/* توضیحات و تیترها */
+[data-theme="light"] .pdp-features-title {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-desc-text {
+    color: rgba(245, 238, 228, 0.85);
+}
+
+/* ویژگی‌های برجسته */
+[data-theme="light"] .pdp-features-section {
+    background: #2E241B;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .pdp-features-list li {
     color: #F5EEE4;
 }
-[data-theme="light"] .pdp-price {
+[data-theme="light"] .pdp-features-list svg {
+    color: var(--c-rose);
+}
+[data-theme="light"] .pdp-features-gradient {
+    background: linear-gradient(to bottom, rgba(46, 36, 27, 0), rgba(46, 36, 27, 0.95) 75%, #2E241B 100%);
+}
+[data-theme="light"] .pdp-features-actions {
+    border-top-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .pdp-features-toggle-btn {
+    color: #d69f72;
+}
+[data-theme="light"] .pdp-features-toggle-btn:hover {
+    color: #FAF6F0;
+}
+
+/* سایدبار خرید (Buy Box) */
+[data-theme="light"] .pdp-buybox-card {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.14);
+    color: #F5EEE4;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+[data-theme="light"] .pdp-stock-status {
+    color: #6ee7b7;
+}
+[data-theme="light"] .pdp-stock-dot {
+    background: #10b981;
+}
+[data-theme="light"] .pdp-price-box {
+    background: #2E241B;
+    border: 1px solid rgba(245, 238, 228, 0.1);
+}
+[data-theme="light"] .pdp-price-label {
+    color: rgba(245, 238, 228, 0.65);
+}
+[data-theme="light"] .pdp-price-val {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-price-val small {
+    color: rgba(245, 238, 228, 0.7);
+}
+[data-theme="light"] .pdp-qty-row {
+    background: #2D2319;
+    border: 1px solid rgba(245, 238, 228, 0.1);
+}
+[data-theme="light"] .pdp-qty-label {
+    color: rgba(245, 238, 228, 0.8);
+}
+[data-theme="light"] .pdp-qty-btn {
+    background: #3D3126;
+    border: 1px solid rgba(245, 238, 228, 0.18);
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-qty-btn:hover {
+    background: #4A3C2F;
+    color: #FFFFFF;
+}
+[data-theme="light"] .pdp-qty-num {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-rep-notice {
+    background: rgba(201, 150, 106, 0.12);
+    border-color: rgba(201, 150, 106, 0.28);
+}
+[data-theme="light"] .pdp-rep-notice-head {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-rep-notice-head svg {
+    color: var(--c-rose);
+}
+[data-theme="light"] .pdp-rep-notice p {
+    color: rgba(245, 238, 228, 0.8) !important;
+}
+
+/* کارت تب‌های مشخصات، راهنما و نظرات */
+[data-theme="light"] .pdp-details-tabs-card {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.14);
+    color: #F5EEE4;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+}
+[data-theme="light"] .pdp-tabs-nav {
+    border-bottom-color: rgba(245, 238, 228, 0.14);
+}
+[data-theme="light"] .pdp-tab-btn {
+    color: rgba(245, 238, 228, 0.65);
+}
+[data-theme="light"] .pdp-tab-btn:hover {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-tab-btn.active {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-specs-table tr {
+    border-bottom-color: rgba(245, 238, 228, 0.1);
+}
+[data-theme="light"] .pdp-specs-table tr:nth-child(even) {
+    background: #2E241B;
+}
+[data-theme="light"] .pdp-specs-table th {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-specs-table td {
+    color: rgba(245, 238, 228, 0.85);
+}
+
+/* باکس نکات اساتید */
+[data-theme="light"] .pdp-tips-box {
+    background: #2E241B;
+    border-color: rgba(201, 150, 106, 0.28);
+    border-right-color: var(--c-rose);
+}
+[data-theme="light"] .pdp-tips-icon {
+    background: rgba(201, 150, 106, 0.2);
+    color: #e8ba95;
+}
+[data-theme="light"] .pdp-tips-content h4 {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-tips-content p {
+    color: rgba(245, 238, 228, 0.85);
+}
+
+/* دیدگاه‌ها و نظرات */
+[data-theme="light"] .pdp-add-review-card {
+    background: #2E241B;
+    border-color: rgba(245, 238, 228, 0.12);
     color: #F5EEE4;
 }
-[data-theme="light"] .prod-spec-table th,
-[data-theme="light"] .prod-spec-table td {
+[data-theme="light"] .pdp-add-review-card h4 {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-review-card {
+    background: #2E241B;
+    border-color: rgba(245, 238, 228, 0.12);
     color: #F5EEE4;
-    border-color: rgba(245, 238, 228, 0.1);
+}
+[data-theme="light"] .pdp-review-author {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-review-date {
+    color: rgba(245, 238, 228, 0.5);
+}
+[data-theme="light"] .pdp-review-body {
+    color: rgba(245, 238, 228, 0.85);
+}
+
+/* محصولات مرتبط */
+[data-theme="light"] .pdp-related-head h3 {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-related-head p {
+    color: rgba(245, 238, 228, 0.65);
+}
+
+/* نوار چسبان خرید موبایل */
+[data-theme="light"] .pdp-mobile-sticky-bar {
+    background: #382E24;
+    border-top-color: rgba(245, 238, 228, 0.14);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.45);
+}
+[data-theme="light"] .pdp-mob-price-label {
+    color: rgba(245, 238, 228, 0.65);
+}
+[data-theme="light"] .pdp-mob-price-val {
+    color: #FAF6F0;
+}
+[data-theme="light"] .pdp-mob-price-val small {
+    color: rgba(245, 238, 228, 0.7);
 }
 [data-theme="light"] .map-box {
     background: #241B12;
