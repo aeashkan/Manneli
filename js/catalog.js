@@ -376,41 +376,250 @@ function renderHomeReps() {
         grid.appendChild(wrap.firstElementChild);
     });
 }
+let repsExpanded = false;
+
+function repSideCardHTML(r) {
+    return `
+        <div class="rep-side-card" id="rep-card-${r.region}" onclick="focusRepOnMap('${r.region}')">
+            <div class="rep-card-top">
+                <div style="display:flex;align-items:center;gap:6px">
+                    <span class="rep-rank-pill" style="background:rgba(201,150,106,.15);color:var(--c-dark)">${r.province || r.region}</span>
+                </div>
+                <div class="rep-rating-tag">
+                    <svg viewBox="0 0 24 24" fill="#f59e0b" width="13" height="13" style="color:#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span>${r.rating || '۴.۸'}</span>
+                    <span style="font-size:10.5px;color:var(--c-muted)">(${faNum(r.reviewsCount || 25)})</span>
+                </div>
+            </div>
+            <div>
+                <h4 class="rep-card-title">${r.name}</h4>
+                <p class="rep-card-manager">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>مدیریت: ${r.manager}</span>
+                </p>
+            </div>
+            <div class="rep-card-details">
+                <div class="rep-detail-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span>${r.address}</span>
+                </div>
+                <div class="rep-detail-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>ساعات کاری: ${r.hours}</span>
+                </div>
+            </div>
+            <div class="rep-card-actions">
+                <button class="btn btn-primary btn-sm" type="button" onclick="callRep('${r.phone}'); event.stopPropagation();">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    تماس با شعبه: <span class="ltr">${r.phoneLocal || r.phone}</span>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function toggleRepsExpand() {
+    repsExpanded = !repsExpanded;
+    renderRepsPage();
+}
+
 function renderRepsPage() {
-    const list = $('reps-list-container');
-    if (list) list.innerHTML = '';
-    const q = ($('rep-search-input').value || '').trim().toLowerCase();
+    const cardsWrapper = $('reps-cards-wrapper');
+    const loadMoreRow = $('reps-load-more-row');
+    const loadMoreBtn = $('reps-load-more-btn');
+    const loadMoreText = $('reps-load-more-text');
+    const sidebarTitle = $('reps-sidebar-title');
+    const sidebarSub = $('reps-sidebar-sub');
+    const countBadge = $('reps-count-badge');
+
+    if (cardsWrapper) cardsWrapper.innerHTML = '';
+
+    const q = ($('rep-search-input') ? $('rep-search-input').value : '').trim().toLowerCase();
     const activeRegion = (document.querySelector('#reps-region-row .filter-btn.active') || {}).dataset || {};
     const region = activeRegion.region || 'all';
-    const keys = Object.keys(representatives).filter(k => {
+
+    // فیلتر بر اساس جستجو و منطقه
+    const allKeys = Object.keys(representatives);
+    let matchedKeys = allKeys.filter(k => {
         const r = representatives[k];
-        const okRegion = region === 'all' || r.region === region;
-        const okQuery = !q || [r.name, r.manager, r.address, r.region].join(' ').toLowerCase().includes(q);
+        const okRegion = region === 'all' || r.region === region || (r.province && r.province.includes(region));
+        const okQuery = !q || [r.name, r.manager, r.address, r.region, r.province || ''].join(' ').toLowerCase().includes(q);
         return okRegion && okQuery;
     });
-    syncIranMap(keys, region, q);
 
-    const countBadge = $('reps-count-badge');
+    // مرتب‌سازی بر اساس امتیاز (بدون اعلام نحوه مرتب‌سازی به کاربر)
+    function parseRepScore(val) {
+        if (typeof val === 'number') return val;
+        if (!val) return 0;
+        const en = String(val).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+        return parseFloat(en) || 0;
+    }
+    matchedKeys.sort((a, b) => {
+        const scoreA = parseRepScore(representatives[a].rating);
+        const scoreB = parseRepScore(representatives[b].rating);
+        if (scoreB !== scoreA) return scoreB - scoreA;
+        return (representatives[b].reviewsCount || 0) - (representatives[a].reviewsCount || 0);
+    });
+
+    // هماهنگ‌سازی نشانگرها و استان‌های نقشه
+    syncIranMap(matchedKeys, region, q);
+
     if (countBadge) {
-        countBadge.innerText = 'تعداد نمایندگان: ' + faNum(keys.length) + ' نفر';
+        countBadge.innerText = 'تعداد کل نمایندگان فعال: ' + faNum(matchedKeys.length) + ' نفر';
     }
 
-    if (keys.length === 0 && list) {
-        list.innerHTML = `<div class="card" style="text-align:center;padding:40px;margin-top:20px"><p class="form-note">نمایندگی با این مشخصات پیدا نشد. برای اخذ نمایندگی در شهر خود، فرم همکاری عمده را تکمیل کنید.</p><button class="btn btn-outline btn-sm" style="margin-top:14px" onclick="switchTab('b2b')">درخواست نمایندگی</button></div>`;
+    if (matchedKeys.length === 0) {
+        if (sidebarTitle) sidebarTitle.innerText = 'شعبه‌ای پیدا نشد';
+        if (sidebarSub) sidebarSub.innerText = 'می‌توانید نام شهر، استان یا مسئول دیگری را جستجو کنید.';
+        if (cardsWrapper) {
+            cardsWrapper.innerHTML = `
+                <div class="card" style="text-align:center;padding:30px 16px;background:#faf8f5">
+                    <p class="form-note" style="margin-bottom:12px">نمایندگی با این مشخصات در سامانه پیدا نشد. برای اخذ نمایندگی در شهر خود، فرم درخواست همکاری را تکمیل کنید.</p>
+                    <button class="btn btn-outline btn-sm" onclick="switchTab('b2b')">درخواست نمایندگی در شهر شما</button>
+                </div>
+            `;
+        }
+        if (loadMoreRow) loadMoreRow.style.display = 'none';
         return;
     }
+
+    // حالت جستجو: نمایش هم‌زمان کلیه موارد جستجوشده در کنار نقشه
+    if (q) {
+        if (sidebarTitle) sidebarTitle.innerText = `شعب منطبق با «${$('rep-search-input').value.trim()}»`;
+        if (sidebarSub) sidebarSub.innerText = 'موقعیت این شعب هم‌زمان روی نقشه نیز با نشانگر فعال علامت‌گذاری شده است.';
+        if (loadMoreRow) loadMoreRow.style.display = 'none';
+
+        matchedKeys.forEach(k => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = repSideCardHTML(representatives[k]);
+            cardsWrapper.appendChild(wrap.firstElementChild);
+        });
+        return;
+    }
+
+    // حالت فیلتر بر اساس منطقه خاص
+    if (region !== 'all') {
+        if (sidebarTitle) sidebarTitle.innerText = `شعبه رسمی استان ${region}`;
+        if (sidebarSub) sidebarSub.innerText = 'دارای مجوز رسمی توزیع سراسری محصولات مانلی.';
+        if (loadMoreRow) loadMoreRow.style.display = 'none';
+
+        matchedKeys.forEach(k => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = repSideCardHTML(representatives[k]);
+            cardsWrapper.appendChild(wrap.firstElementChild);
+        });
+        return;
+    }
+
+    // حالت پیش‌فرض (همه شعب): ۳ نماینده اول و دکمه موارد بیشتر
+    if (!repsExpanded) {
+        const top3Keys = matchedKeys.slice(0, 3);
+        const remainingCount = matchedKeys.length - 3;
+
+        if (sidebarTitle) sidebarTitle.innerText = 'لیست نمایندگی‌های مانلی';
+        if (sidebarSub) sidebarSub.innerText = 'ارسال سریع شهری و دسترسی مستقیم به محصولات مانلی در سراسر کشور';
+
+        top3Keys.forEach(k => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = repSideCardHTML(representatives[k]);
+            cardsWrapper.appendChild(wrap.firstElementChild);
+        });
+
+        if (loadMoreRow) {
+            if (remainingCount > 0) {
+                loadMoreRow.style.display = 'block';
+                if (loadMoreText) loadMoreText.innerText = `مشاهده موارد بیشتر (${faNum(remainingCount)} نماینده دیگر)`;
+                if (loadMoreBtn) loadMoreBtn.classList.remove('is-expanded');
+            } else {
+                loadMoreRow.style.display = 'none';
+            }
+        }
+    } else {
+        // حالت بازشده (نمایش کلیه نمایندگان)
+        if (sidebarTitle) sidebarTitle.innerText = 'لیست نمایندگی‌های مانلی';
+        if (sidebarSub) sidebarSub.innerText = 'ارسال سریع شهری و دسترسی مستقیم به محصولات مانلی در سراسر کشور';
+
+        matchedKeys.forEach(k => {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = repSideCardHTML(representatives[k]);
+            cardsWrapper.appendChild(wrap.firstElementChild);
+        });
+
+        if (loadMoreRow) {
+            loadMoreRow.style.display = 'block';
+            if (loadMoreText) loadMoreText.innerText = 'نمایش کمتر';
+            if (loadMoreBtn) loadMoreBtn.classList.add('is-expanded');
+        }
+    }
 }
+
 function searchRepresentatives() { renderRepsPage(); }
+
 function filterRepsByRegion(region) {
     document.querySelectorAll('#reps-region-row .filter-btn').forEach(b =>
         b.classList.toggle('active', b.dataset.region === region));
     renderRepsPage();
 }
 
+// فوکوس متقابل نماینده روی نقشه و باز کردن اطلاعات
+function focusRepOnMap(region) {
+    const r = representatives[region];
+    if (!r) return;
+
+    // هایلایت کردن پین مربوطه روی نقشه
+    document.querySelectorAll('.iran-pin').forEach(pin => {
+        const isMatch = pin.dataset.region === region;
+        pin.classList.toggle('highlighted', isMatch);
+    });
+
+    // هایلایت کردن کارت در سایدبار
+    document.querySelectorAll('.rep-side-card').forEach(card => card.classList.remove('is-active'));
+    const card = document.getElementById('rep-card-' + region);
+    if (card) {
+        card.classList.add('is-active');
+    }
+
+    // در موبایل اسکرول نرم به نقشه تا نشانگر دیده شود
+    if (window.innerWidth <= 991) {
+        const mapBox = document.querySelector('.map-box');
+        if (mapBox) {
+            mapBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // باز کردن مودال اطلاعات کامل نماینده
+    openRepInfo(region);
+}
+
+// فوکوس از روی نقشه به کارت سایدبار
+function focusRepFromMap(region) {
+    // اگر لیست جمع است و این نماینده در حال حاضر داخل صفحه رندر نشده، ابتدا لیست را باز می‌کنیم
+    if (!repsExpanded && !document.getElementById('rep-card-' + region)) {
+        repsExpanded = true;
+        renderRepsPage();
+    }
+
+    // هایلایت کردن پین
+    document.querySelectorAll('.iran-pin').forEach(pin => {
+        pin.classList.toggle('highlighted', pin.dataset.region === region);
+    });
+
+    // اسکرول و هایلایت کارت
+    document.querySelectorAll('.rep-side-card').forEach(card => card.classList.remove('is-active'));
+    const card = document.getElementById('rep-card-' + region);
+    if (card) {
+        card.classList.add('is-active');
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    openRepInfo(region);
+}
+
 // ---------- نقشه استانی ایران ----------
 function buildIranMap() {
     const gProv = $('iran-provinces');
     const gPins = $('iran-pins');
+    if (!gProv || !gPins) return;
     gProv.innerHTML = '';
     gPins.innerHTML = '';
     const NS = 'http://www.w3.org/2000/svg';
@@ -418,7 +627,7 @@ function buildIranMap() {
         const el = document.createElementNS(NS, 'path');
         el.setAttribute('d', p.d);
         el.setAttribute('class', 'iran-province');
-        if (p.pin) { el.dataset.region = p.pin; el.dataset.en = p.en; }
+        el.dataset.en = p.en;
         gProv.appendChild(el);
     });
     (IRAN_PINS || []).forEach(p => {
@@ -430,12 +639,12 @@ function buildIranMap() {
         g.setAttribute('role', 'button');
         g.setAttribute('aria-label', 'مشخصات نماینده ' + p.label);
         g.innerHTML =
-            '<circle class="pin-halo" cx="0" cy="0" r="7"></circle>' +
+            '<circle class="pin-halo" cx="0" cy="0" r="8"></circle>' +
             '<circle class="pin-ring" cx="0" cy="0" r="5"></circle>' +
-            '<circle class="pin-dot" cx="0" cy="0" r="2"></circle>' +
-            '<text class="pin-label" x="0" y="18">' + p.label + '</text>';
-        g.addEventListener('click', () => openRepInfo(p.region));
-        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openRepInfo(p.region); } });
+            '<circle class="pin-dot" cx="0" cy="0" r="2.2"></circle>' +
+            '<text class="pin-label" x="0" y="17">' + p.label + '</text>';
+        g.addEventListener('click', () => focusRepFromMap(p.region));
+        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusRepFromMap(p.region); } });
         gPins.appendChild(g);
     });
 }
@@ -464,7 +673,7 @@ function openRepInfo(region) {
     const r = representatives[region];
     if (!r) return;
     $('rep-info-name').innerText = r.name;
-    $('rep-info-region').innerText = 'استان ' + r.region + ' • نمایندگی رسمی مانلی';
+    $('rep-info-region').innerText = (r.province ? r.province : ('استان ' + r.region)) + ' • نمایندگی رسمی مانلی';
     $('rep-info-manager').innerHTML = 'مسئول: ' + r.manager;
     $('rep-info-address').innerHTML = 'آدرس: ' + r.address;
     $('rep-info-hours').innerHTML = 'ساعات کاری: ' + r.hours;

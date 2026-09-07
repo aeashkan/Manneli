@@ -6,6 +6,9 @@ function switchTab(tabId) {
     if (target) target.classList.add('active');
     document.querySelectorAll('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
     document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+    if (tabId === 'reps') {
+        if (typeof renderRepsPage === 'function') renderRepsPage();
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -77,9 +80,42 @@ function toggleFaq(btn) {
 // ---------- اعلان ----------
 function showAlert(msg, type = 'success') {
     const ico = $('alert-ico');
-    ico.className = 'alert-ico ' + type;
-    ico.innerText = type === 'success' ? '✓' : type === 'warning' ? '!' : 'i';
-    $('alert-text').innerText = msg;
-    $('alert-modal').classList.add('show');
+    if (ico) {
+        ico.className = 'alert-ico ' + type;
+        ico.innerText = type === 'success' ? '✓' : type === 'warning' ? '!' : 'i';
+    }
+    const text = $('alert-text');
+    if (text) text.innerText = msg;
+    const modal = $('alert-modal');
+    if (modal) modal.classList.add('show');
+
+    // لغو فوکوس المان قبلی تا فشردن Enter فرم‌های پس‌زمینه را مجدداً ارسال نکند
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+    }
+
+    // قرارگیری خودکار فوکوس روی دکمه «متوجه شدم»
+    const confirmBtn = $('alert-confirm-btn');
+    if (confirmBtn) {
+        setTimeout(() => {
+            confirmBtn.focus();
+        }, 40);
+    }
 }
-function closeAlert() { $('alert-modal').classList.remove('show'); }
+
+function closeAlert() {
+    const modal = $('alert-modal');
+    if (modal) modal.classList.remove('show');
+}
+
+// بستن پنجره اعلان با فشردن کلید Enter، Escape یا Space در سراسر صفحه
+document.addEventListener('keydown', (e) => {
+    const alertModal = $('alert-modal');
+    if (alertModal && alertModal.classList.contains('show')) {
+        if (e.key === 'Enter' || e.key === 'Escape' || e.key === ' ' || e.key === 'Spacebar') {
+            e.preventDefault();
+            e.stopPropagation();
+            closeAlert();
+        }
+    }
+}, true);

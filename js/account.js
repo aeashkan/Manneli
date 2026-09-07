@@ -796,24 +796,148 @@ function submitEducatorApply() {
     }
     ['edu-reg-name','edu-reg-phone','edu-reg-city','edu-reg-exp','edu-reg-specialty','edu-reg-instagram'].forEach(id => $(id).value = '');
     $('edu-file-status').innerText = 'برای آپلود رزومه یا گواهی کلیک کنید';
-    showAlert('درخواست شما برای بررسی به دفتر مرکزی ارسال شد. نتیجه ظرف ۴۸ ساعت اعلام می‌شود؛ پس از تایید، کد فعال‌سازی یک‌بارمصرف برای شما ارسال می‌گردد.', 'success');
+    showAlert('درخواست شما برای بررسی به دفتر مرکزی ارسال شد. نتیجه ظرف ۴۸ ساعت اعلام می‌شود؛ پس از تایید، رمز عبور برای شما ارسال می‌شود.', 'success');
 }
+let educatorLoginMode = 'password';
+let eduOtpCountdownTimer = null;
+
+function requestEducatorOtp() {
+    const phoneInput = $('edu-login-phone');
+    const rawPhone = (phoneInput ? phoneInput.value : '').trim();
+    const cleanPhone = rawPhone.replace(/\D/g, '');
+
+    if (!cleanPhone || cleanPhone.length < 10) {
+        showAlert('لطفاً ابتدا شماره همراه معتبر خود را وارد کنید.', 'warning');
+        if (phoneInput) phoneInput.focus();
+        return;
+    }
+
+    const otpBtn = $('edu-request-otp-btn');
+    if (otpBtn && otpBtn.disabled) return;
+
+    // شبیه‌سازی ارسال پیامک با کد یک‌بارمصرف تستی
+    const testCode = '۱۲۳۴';
+    showAlert(`رمز یک‌بارمصرف به شماره ${rawPhone} ارسال شد. (کد تستی: ${testCode})`, 'success');
+
+    const codeInput = $('edu-login-code');
+    if (codeInput) {
+        codeInput.value = '1234';
+        codeInput.focus();
+    }
+
+    // تایمر ۶۰ ثانیه برای ارسال مجدد
+    if (otpBtn) {
+        let remaining = 60;
+        otpBtn.disabled = true;
+        otpBtn.innerText = `ارسال مجدد (${faNum(remaining)})`;
+
+        if (eduOtpCountdownTimer) clearInterval(eduOtpCountdownTimer);
+        eduOtpCountdownTimer = setInterval(() => {
+            remaining--;
+            if (remaining > 0) {
+                otpBtn.innerText = `ارسال مجدد (${faNum(remaining)})`;
+            } else {
+                clearInterval(eduOtpCountdownTimer);
+                eduOtpCountdownTimer = null;
+                otpBtn.disabled = false;
+                otpBtn.innerText = 'دریافت رمز یک‌بارمصرف';
+            }
+        }, 1000);
+    }
+}
+
+function toggleEducatorLoginMode() {
+    educatorLoginMode = educatorLoginMode === 'password' ? 'otp' : 'password';
+    const credLabel = $('edu-cred-label');
+    const passInput = $('edu-login-pass');
+    const otpWrap = $('edu-otp-input-wrap');
+    const codeInput = $('edu-login-code');
+    const toggleBtnText = $('edu-toggle-btn-text');
+    const note = $('edu-login-note');
+    const submitBtn = $('edu-login-submit-btn');
+
+    if (educatorLoginMode === 'otp') {
+        if (credLabel) credLabel.innerText = 'رمز یک‌بارمصرف';
+        if (passInput) passInput.style.display = 'none';
+        if (otpWrap) otpWrap.style.display = 'block';
+        if (codeInput) codeInput.focus();
+        if (toggleBtnText) toggleBtnText.innerText = 'ورود با رمز عبور';
+        if (note) note.innerText = 'شماره همراه را وارد کرده و دکمه «دریافت رمز یک‌بارمصرف» را بزنید.';
+        if (submitBtn) submitBtn.innerText = 'ورود با رمز یک‌بارمصرف';
+    } else {
+        if (credLabel) credLabel.innerText = 'رمز عبور';
+        if (passInput) {
+            passInput.style.display = 'block';
+            passInput.focus();
+        }
+        if (otpWrap) otpWrap.style.display = 'none';
+        if (toggleBtnText) toggleBtnText.innerText = 'ورود با رمز یک‌بارمصرف';
+        if (note) note.innerText = 'ورود اساتید تاییدشده با شماره همراه و رمز عبور.';
+        if (submitBtn) submitBtn.innerText = 'ورود به پنل استاد';
+    }
+}
+
 function attemptEducatorLogin() {
-    const phone = $('edu-login-phone').value.trim();
-    const code = $('edu-login-code').value.trim();
-    if (!phone || !code) { showAlert('لطفاً شماره همراه و کد فعال‌سازی را وارد کنید.', 'warning'); return; }
-    if (phone.replace(/\D/g, '').length < 10) { showAlert('شماره همراه معتبر نیست.', 'warning'); return; }
-    if (code.length < 6) { showAlert('کد فعال‌سازی معتبر نیست.', 'warning'); return; }
-    // نسخه نمایشی: کد یک‌بارمصرف واقعی از طریق پیامک ارسال می‌شود
-    $('edu-guest-view').style.display = 'none';
-    $('edu-dashboard').style.display = 'block';
-    $('edu-login-phone').value = ''; $('edu-login-code').value = '';
-    renderEducatorDashboard();
-    showAlert('ورود شما تایید شد. کد یک‌بارمصرف اکنون استفاده شده و غیرفعال شد.', 'success');
+    const phone = $('edu-login-phone') ? $('edu-login-phone').value.trim() : '';
+    if (!phone) {
+        showAlert('لطفاً شماره همراه خود را وارد کنید.', 'warning');
+        return;
+    }
+    if (phone.replace(/\D/g, '').length < 10) {
+        showAlert('شماره همراه معتبر نیست.', 'warning');
+        return;
+    }
+
+    if (educatorLoginMode === 'password') {
+        const pass = $('edu-login-pass') ? $('edu-login-pass').value.trim() : '';
+        if (!pass) {
+            showAlert('لطفاً رمز عبور خود را وارد کنید.', 'warning');
+            return;
+        }
+        if (pass.length < 4) {
+            showAlert('رمز عبور باید حداقل ۴ کاراکتر باشد.', 'warning');
+            return;
+        }
+        $('edu-guest-view').style.display = 'none';
+        $('edu-dashboard').style.display = 'block';
+        if ($('edu-login-phone')) $('edu-login-phone').value = '';
+        if ($('edu-login-pass')) $('edu-login-pass').value = '';
+        renderEducatorDashboard();
+        showAlert('خوش آمدید، ورود به پنل استاد با موفقیت انجام شد.', 'success');
+    } else {
+        const code = $('edu-login-code') ? $('edu-login-code').value.trim() : '';
+        if (!code) {
+            showAlert('لطفاً رمز یک‌بارمصرف یا کد فعال‌سازی را وارد کنید.', 'warning');
+            return;
+        }
+        if (code.length < 4) {
+            showAlert('کد یک‌بارمصرف معتبر نیست.', 'warning');
+            return;
+        }
+        $('edu-guest-view').style.display = 'none';
+        $('edu-dashboard').style.display = 'block';
+        if ($('edu-login-phone')) $('edu-login-phone').value = '';
+        if ($('edu-login-code')) $('edu-login-code').value = '';
+        renderEducatorDashboard();
+        showAlert('ورود با رمز یک‌بارمصرف تأیید شد. خوش آمدید.', 'success');
+    }
 }
+
 function lockEducatorPortal() {
     $('edu-dashboard').style.display = 'none';
     $('edu-guest-view').style.display = 'block';
+    if ($('edu-login-phone')) $('edu-login-phone').value = '';
+    if ($('edu-login-pass')) $('edu-login-pass').value = '';
+    if ($('edu-login-code')) $('edu-login-code').value = '';
+    if (eduOtpCountdownTimer) {
+        clearInterval(eduOtpCountdownTimer);
+        eduOtpCountdownTimer = null;
+        const otpBtn = $('edu-request-otp-btn');
+        if (otpBtn) {
+            otpBtn.disabled = false;
+            otpBtn.innerText = 'دریافت رمز یک‌بارمصرف';
+        }
+    }
 }
 function renderEducatorDashboard() {
     $('edu-orders-list').innerHTML = ordersState.map(o => orderRowHTML(o)).join('') || '<p class="form-note" style="color:rgba(245,238,228,.6)">درخواستی ثبت نشده است.</p>';

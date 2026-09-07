@@ -59,12 +59,24 @@ function hideCartToast() { $('toast').classList.remove('show'); }
 // پیشنهاد نماینده در سبد (قبل از دکمه خرید مستقیم)
 function findRepForCity(city) {
     if (!city) return null;
-    const entry = Object.entries(representatives).find(([k, r]) => k === city || city.includes(r.region) || r.region.includes(city));
+    const cleanCity = String(city).trim();
+    if (!cleanCity) return null;
+
+    if (representatives[cleanCity]) return representatives[cleanCity];
+
+    const entry = Object.entries(representatives).find(([k, r]) => {
+        if (k === cleanCity) return true;
+        if (r.region && (cleanCity.includes(r.region) || r.region.includes(cleanCity))) return true;
+        if (r.province && (cleanCity.includes(r.province) || r.province.includes(cleanCity))) return true;
+        if (r.address && r.address.includes(cleanCity)) return true;
+        return false;
+    });
     return entry ? entry[1] : null;
 }
 function updateCartRepSuggest() {
     const box = $('cart-rep-suggest');
-    const gateCity = $('gate-city').value;
+    if (!box) return;
+    const gateCity = $('gate-city') ? $('gate-city').value : '';
     const city = gateCity || (currentUser && currentUser.city);
     const r = findRepForCity(city);
     if (!r) { box.style.display = 'none'; box.innerHTML = ''; return; }
@@ -73,8 +85,133 @@ function updateCartRepSuggest() {
         <div class="rep-suggest">
             <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
             نماینده رسمی در شهر شما: ${r.name}</h5>
-            <p>تحویل سریع‌تر با تماس مستقیم: <span class="ltr">${r.phone}</span></p>
+            <p>تحویل سریع‌تر با تماس مستقیم: <span class="ltr">${r.phoneLocal || r.phone}</span></p>
         </div>`;
+}
+
+// ---------- متغیرها و توابع مودال خرید حضوری از فروشگاه نماینده ----------
+let currentRepForModal = null;
+let currentRepCityForModal = '';
+let pendingOrderDataForOnline = null;
+let dismissedRepForCity = null;
+
+function checkAndPromptRepForCity(city, isAutoPrompt = false) {
+    if (!city) return;
+    const rep = findRepForCity(city);
+    if (!rep) return;
+    if (isAutoPrompt && dismissedRepForCity === city) return;
+    openRepModal(rep, city);
+}
+
+function openRepModal(rep, city) {
+    if (!rep) return;
+    currentRepForModal = rep;
+    currentRepCityForModal = city || rep.region;
+
+    const modal = $('rep-modal');
+    if (!modal) return;
+
+    const cityEl = $('rep-modal-city');
+    if (cityEl) cityEl.innerText = currentRepCityForModal;
+
+    const nameEl = $('rep-modal-name');
+    if (nameEl) nameEl.innerText = rep.name;
+
+    const addrEl = $('rep-modal-address');
+    if (addrEl) {
+        addrEl.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--c-rose);flex-shrink:0;margin-top:2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>${rep.address}</span>
+        `;
+    }
+
+    const phoneEl = $('rep-modal-phone');
+    if (phoneEl) {
+        phoneEl.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>تماس: <b class="ltr" style="color:var(--c-dark)">${rep.phoneLocal || rep.phone}</b></span>
+        `;
+    }
+
+    const hoursEl = $('rep-modal-hours');
+    if (hoursEl) {
+        hoursEl.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>ساعت کاری: ${rep.hours || '۱۰:۰۰ الی ۲۱:۰۰'}</span>
+        `;
+    }
+
+    modal.classList.add('show');
+}
+
+function closeRepModal() {
+    const modal = $('rep-modal');
+    if (modal) modal.classList.remove('show');
+}
+
+function chooseContinueOnline() {
+    closeRepModal();
+    if (currentRepCityForModal) {
+        dismissedRepForCity = currentRepCityForModal;
+    }
+    if (pendingOrderDataForOnline) {
+        const data = pendingOrderDataForOnline;
+        pendingOrderDataForOnline = null;
+        executeOrderPlacement(data);
+    }
+}
+
+function chooseStorePickup() {
+    closeRepModal();
+    const rep = currentRepForModal;
+    const city = currentRepCityForModal || (rep ? rep.region : '');
+    pendingOrderDataForOnline = null;
+
+    if (!rep) return;
+
+    const desc = cart.map(i => i.title + ' × ' + i.qty).join('، ');
+    const price = cartTotal();
+    const orderId = Math.floor(Math.random() * 90000) + 10000;
+    const orderItems = cart.map(i => ({ ...i }));
+
+    // ثبت در تاریخچه سفارشات کاربر به عنوان هماهنگی خرید حضوری
+    ordersState.unshift({
+        id: orderId,
+        desc: desc,
+        price: price,
+        date: 'امروز',
+        status: 'هماهنگ‌شده جهت خرید و تحویل حضوری',
+        statusCode: 'delivered',
+        type: 'خرید حضوری از فروشگاه نمایندگی (' + rep.region + ')',
+        trackingCode: 'STORE-' + orderId,
+        shippingAddress: rep.address,
+        recipientName: currentUser.name || (currentUser.firstName ? currentUser.firstName + ' ' + (currentUser.lastName || '') : 'مشتری گرامی'),
+        recipientPhone: currentUser.phone || '',
+        items: orderItems,
+        timeline: [
+            { title: 'هماهنگی اقلام با فروشگاه نمایندگی ' + rep.region, time: 'امروز - دقایقی پیش', done: true },
+            { title: 'مراجعه حضوری به فروشگاه و بررسی اقلام', time: 'ساعات کاری: ' + (rep.hours || '۱۰:۰۰ الی ۲۱:۰۰'), done: false },
+            { title: 'تسویه حساب و پرداخت در محل فروشگاه', time: 'هنگام تحویل', done: false }
+        ]
+    });
+
+    // خالی کردن کامل سبد خرید طبق درخواست کاربر
+    cart = [];
+    updateCartUI();
+    if (typeof renderCustomerDashboard === 'function') {
+        renderCustomerDashboard();
+    }
+
+    // پیام هماهنگی به کاربر
+    const pickupMsg = `سفارش شما جهت خرید و تحویل حضوری با نمایندگی رسمی مانلی در ${rep.region} (${rep.name}) هماهنگ شد.\n\nلطفاً جهت دریافت اقلام انتخابی و تسویه حساب در محل به فروشگاه مراجعه فرمایید:\nنشانی: ${rep.address}\nساعت کاری: ${rep.hours || '۱۰:۰۰ الی ۲۱:۰۰'}\nتلفن تماس: ${rep.phoneLocal || rep.phone}`;
+    showAlert(pickupMsg, 'success');
+
+    setTimeout(() => {
+        switchTab('profile');
+        if (typeof switchProfileNav === 'function') {
+            switchProfileNav('cust-orders');
+        }
+    }, 2200);
 }
 
 // ---------- چک‌اوت و صفحه تکمیل اطلاعات ----------
@@ -127,6 +264,13 @@ function renderCheckoutPage() {
 
         renderCheckoutSavedAddresses(userAddresses);
         selectCheckoutAddress(selectedCheckoutAddressId);
+
+        // بررسی نمایندگی در شهر آدرس پیش‌فرض
+        if (defaultAddr && defaultAddr.city) {
+            setTimeout(() => {
+                checkAndPromptRepForCity(defaultAddr.city, true);
+            }, 300);
+        }
     } else {
         checkoutAddressMode = 'new';
         if (savedWrap) savedWrap.style.display = 'none';
@@ -221,11 +365,18 @@ function selectCheckoutAddress(addrId) {
             citySelect.value = hasOption ? addr.city : 'سایر';
         }
         onCheckoutCityChange(addr.city);
+
+        if (addr.city && dismissedRepForCity !== addr.city) {
+            setTimeout(() => {
+                checkAndPromptRepForCity(addr.city, true);
+            }, 250);
+        }
     }
 }
 
 function showNewAddressFormInCheckout() {
     checkoutAddressMode = 'new';
+    dismissedRepForCity = null;
     $('checkout-saved-addresses-wrap').style.display = 'none';
     $('checkout-new-address-wrap').style.display = 'block';
     const newHeader = $('checkout-new-address-header');
@@ -248,25 +399,9 @@ function backToSavedAddressesInCheckout() {
 }
 
 function onCheckoutCityChange(cityParam) {
-    const city = cityParam !== undefined ? cityParam : $('co-city').value;
-    const rep = findRepForCity(city);
-    const banner = $('checkout-rep-banner');
-    const optRep = $('opt-shipping-rep');
+    const city = cityParam !== undefined ? cityParam : ($('co-city') ? $('co-city').value : '');
     const optDirect = $('opt-shipping-direct');
-
-    if (rep) {
-        banner.style.display = 'block';
-        banner.innerHTML = `
-            <h5><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-            نماینده رسمی مانلی در ${rep.region}: ${rep.name}</h5>
-            <p>مسئول: ${rep.manager} • تماس مستقیم: <span class="ltr">${rep.phone}</span></p>
-            <p style="margin-top:4px;font-size:11.5px;color:var(--c-rose-deep)">با انتخاب تحویل از نماینده، سفارش شما به سرعت از انبار محلی تحویل خواهد شد.</p>
-        `;
-        optRep.style.display = 'flex';
-        optRep.querySelector('input').checked = true;
-    } else {
-        banner.style.display = 'none';
-        optRep.style.display = 'none';
+    if (optDirect && optDirect.querySelector('input')) {
         optDirect.querySelector('input').checked = true;
     }
 }
@@ -283,7 +418,7 @@ function finalizeCheckoutOrder() {
     let city = '';
     let zip = '';
     let address = '';
-    const notes = ($('co-notes').value || '').trim();
+    const notes = ($('co-notes')?.value || '').trim();
 
     if (checkoutAddressMode === 'saved') {
         const userAddresses = getUserAddresses(currentUser);
@@ -299,11 +434,11 @@ function finalizeCheckoutOrder() {
         address = selectedAddr.address || '';
     } else {
         // حالت آدرس جدید (اگر آدرس ذخیره‌شده نبود یا کاربر آدرس جدید وارد کرد)
-        name = $('co-name').value.trim();
-        phone = $('co-phone').value.trim();
-        city = $('co-city').value;
-        zip = $('co-zip').value.trim();
-        address = $('co-address').value.trim();
+        name = ($('co-name')?.value || '').trim();
+        phone = ($('co-phone')?.value || '').trim();
+        city = $('co-city')?.value || '';
+        zip = ($('co-zip')?.value || '').trim();
+        address = ($('co-address')?.value || '').trim();
 
         if (!name || !phone || !city || !zip || !address) {
             showAlert('لطفاً مشخصات و آدرس پستی را به طور کامل تکمیل نمایید.', 'warning');
@@ -347,17 +482,25 @@ function finalizeCheckoutOrder() {
         }
     }
 
-    const shippingMethod = document.querySelector('input[name="shipping-method"]:checked')?.value || 'direct';
-    const rep = findRepForCity(city);
+    const orderData = { name, phone, city, zip, address, notes };
 
+    // بررسی وجود نمایندگی در شهر
+    const rep = findRepForCity(city);
+    if (rep && dismissedRepForCity !== city) {
+        pendingOrderDataForOnline = orderData;
+        openRepModal(rep, city);
+        return;
+    }
+
+    // ثبت نهایی سفارش آنلاین به صورت پستی از انبار مرکزی
+    executeOrderPlacement(orderData);
+}
+
+function executeOrderPlacement({ name, phone, city, zip, address, notes }) {
     const desc = cart.map(i => i.title + ' × ' + i.qty).join('، ');
     const price = cartTotal();
     const orderId = Math.floor(Math.random() * 90000) + 10000;
-
-    let deliveryType = 'ارسال پستی پیشتاز از تهران';
-    if (shippingMethod === 'rep' && rep) {
-        deliveryType = 'تحویل از نماینده رسمی: ' + rep.name;
-    }
+    const deliveryType = 'ارسال پستی پیشتاز از تهران';
 
     // کپی اقلام سبد برای نگهداری در سفارش
     const orderItems = cart.map(i => ({ ...i }));
@@ -368,7 +511,7 @@ function finalizeCheckoutOrder() {
         desc: desc,
         price: price,
         date: 'امروز',
-        status: shippingMethod === 'rep' ? 'ارجاع شده به نماینده رسمی' : 'در حال آماده‌سازی و بسته‌بندی',
+        status: 'در حال آماده‌سازی و بسته‌بندی',
         statusCode: 'processing',
         type: deliveryType,
         trackingCode: 'MNL-' + orderId,
@@ -376,10 +519,11 @@ function finalizeCheckoutOrder() {
         recipientName: name,
         recipientPhone: phone,
         items: orderItems,
+        notes: notes || '',
         timeline: [
             { title: 'ثبت سفارش و پرداخت', time: 'امروز - دقایقی پیش', done: true },
-            { title: shippingMethod === 'rep' ? 'هماهنگی و تحویل از انبار نماینده' : 'پردازش و کنترل کیفی در انبار مرکزی تهران', time: 'در حال انجام', done: true },
-            { title: shippingMethod === 'rep' ? 'تحویل به مشتری توسط نماینده' : 'تحویل به پست پیشتاز', time: 'پیش‌بینی: ۱ الی ۲ روز کاری', done: false },
+            { title: 'پردازش و کنترل کیفی در انبار مرکزی تهران', time: 'در حال انجام', done: true },
+            { title: 'تحویل به پست پیشتاز', time: 'پیش‌بینی: ۱ الی ۲ روز کاری', done: false },
             { title: 'تحویل نهایی مرسوله', time: 'در انتظار ارسال', done: false }
         ]
     });
@@ -387,12 +531,17 @@ function finalizeCheckoutOrder() {
     // خالی کردن سبد
     cart = [];
     updateCartUI();
-    renderCustomerDashboard();
+    if (typeof renderCustomerDashboard === 'function') {
+        renderCustomerDashboard();
+    }
 
     // پیام تایید و هدایت به پنل کاربری برای مشاهده سفارش
     showAlert(`سفارش #${faNum(orderId)} با موفقیت ثبت شد! نحوه ارسال: ${deliveryType}. سپاس از خرید شما از مانلی.`, 'success');
 
     setTimeout(() => {
         switchTab('profile');
+        if (typeof switchProfileNav === 'function') {
+            switchProfileNav('cust-orders');
+        }
     }, 1800);
 }

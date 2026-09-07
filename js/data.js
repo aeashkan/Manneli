@@ -250,28 +250,92 @@ const products = [
 
 const representatives = {
     "تهران": {
+        id: "rep-tehran",
         name: "مجموعه تخصصی نیلآرت تهران (غرب)",
         address: "تهران، میدان کاج، پاساژ سرو، واحد ۲۴",
         phone: "021-88776655", phoneLocal: "۰۲۱-۸۸۷۷۶۶۵۵",
         manager: "سرکار خانم مهسا رضایی",
-        region: "تهران", hours: "۱۰:۰۰ تا ۲۰:۰۰",
-        instagram: "@manneli_tehran_west"
+        region: "تهران", province: "استان تهران", hours: "۱۰:۰۰ تا ۲۰:۰۰",
+        instagram: "@manneli_tehran_west",
+        rating: "۴.۹", reviewsCount: 48,
+        badge: "شعبه رسمی استان تهران"
     },
     "اصفهان": {
+        id: "rep-isfahan",
         name: "بازرگانی لوازم ناخن اصفهان (پارک)",
         address: "اصفهان، چهارباغ بالا، مجتمع تجاری پارک",
         phone: "031-36282930", phoneLocal: "۰۳۱-۳۶۲۸۲۹۳۰",
         manager: "جناب آقای حسینی",
-        region: "اصفهان", hours: "۰۹:۳۰ تا ۲۱:۳۰",
-        instagram: "@manneli_isfahan_park"
+        region: "اصفهان", province: "استان اصفهان", hours: "۰۹:۳۰ تا ۲۱:۳۰",
+        instagram: "@manneli_isfahan_park",
+        rating: "۴.۹", reviewsCount: 39,
+        badge: "شعبه رسمی استان اصفهان"
     },
     "شیراز": {
+        id: "rep-shiraz",
         name: "گالری لوازم ناخن مانلی شیراز",
         address: "شیراز، معالی‌آباد، مجتمع تجاری آرین",
         phone: "071-36342526", phoneLocal: "۰۷۱-۳۶۳۴۲۵۲۶",
         manager: "سرکار خانم عباسی",
-        region: "شیراز", hours: "۱۰:00 تا ۲۱:۰۰",
-        instagram: "@manneli_shiraz_gallery"
+        region: "شیراز", province: "استان فارس", hours: "۱۰:۰۰ تا ۲۱:۰۰",
+        instagram: "@manneli_shiraz_gallery",
+        rating: "۴.۸", reviewsCount: 34,
+        badge: "شعبه رسمی استان فارس"
+    },
+    "مشهد": {
+        id: "rep-mashhad",
+        name: "مرکز پخش ناخن مانلی خراسان (مشهد)",
+        address: "مشهد، بلوار سجاد، تقاطع بزرگمهر، برج نگین",
+        phone: "051-37661122", phoneLocal: "۰۵۱-۳۷۶۶۱۱۲۲",
+        manager: "سرکار خانم مهندس رمضانی",
+        region: "مشهد", province: "استان خراسان رضوی", hours: "۰۹:۰۰ تا ۲۱:۰۰",
+        instagram: "@manneli_mashhad",
+        rating: "۴.۸", reviewsCount: 29,
+        badge: "شعبه رسمی استان خراسان رضوی"
+    },
+    "تبریز": {
+        id: "rep-tabriz",
+        name: "توزیع تخصصی متریال ناخن تبریز (لاله)",
+        address: "تبریز، خیابان ولیعصر، مجتمع تجاری هما، طبقه دوم",
+        phone: "041-33324455", phoneLocal: "۰۴۱-۳۳۳۲۴۴۵۵",
+        manager: "جناب آقای مهندس تبریزی",
+        region: "تبریز", province: "استان آذربایجان شرقی", hours: "۱۰:۰۰ تا ۲۰:۳۰",
+        instagram: "@manneli_tabriz_center",
+        rating: "۴.۸", reviewsCount: 26,
+        badge: "شعبه رسمی استان آذربایجان شرقی"
+    },
+    "رشت": {
+        id: "rep-rasht",
+        name: "خانه ناخن تخصصی گیلان (رشت)",
+        address: "رشت، گلسار، خیابان ۱۰۸، ساختمان پزشکان و اساتید",
+        phone: "013-32115566", phoneLocal: "۰۱۳-۳۲۱۱۵۵۶۶",
+        manager: "سرکار خانم صادقی",
+        region: "رشت", province: "استان گیلان", hours: "۱۰:۰۰ تا ۲۰:۰۰",
+        instagram: "@manneli_gilan_rasht",
+        rating: "۴.۸", reviewsCount: 21,
+        badge: "شعبه رسمی استان گیلان"
+    },
+    "کرج": {
+        id: "rep-karaj",
+        name: "نمایندگی رسمی مانلی البرز (کرج)",
+        address: "کرج، مهرشهر، بلوار شهرداری، خیابان ۱۰۰ غربی",
+        phone: "026-33418899", phoneLocal: "۰۲۶-۳۳۴۱۸۸۹۹",
+        manager: "سرکار خانم احمدی",
+        region: "کرج", province: "استان البرز", hours: "۱۰:۰۰ تا ۲۱:۰۰",
+        instagram: "@manneli_alborz_karaj",
+        rating: "۴.۷", reviewsCount: 22,
+        badge: "شعبه رسمی استان البرز"
+    },
+    "اهواز": {
+        id: "rep-ahvaz",
+        name: "بازرگانی مانلی نیل جنوب (اهواز)",
+        address: "اهواز، کیانپارس، خیابان وهابی، مجتمع تجاری بهاران",
+        phone: "061-33917788", phoneLocal: "۰۶۱-۳۳۹۱۷۷۸۸",
+        manager: "جناب آقای دکتر شریفی",
+        region: "اهواز", province: "استان خوزستان", hours: "۰۹:۳۰ تا ۲۲:۰۰",
+        instagram: "@manneli_ahvaz_south",
+        rating: "۴.۷", reviewsCount: 19,
+        badge: "شعبه رسمی استان خوزستان"
     }
 };
 

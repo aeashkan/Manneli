@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>پورتال برند مانلی | Manneli Brand Portal</title>
-    <link rel="stylesheet" href="css/base.css?v=1.4">
-    <link rel="stylesheet" href="css/layout.css?v=1.4">
-    <link rel="stylesheet" href="css/components.css?v=1.4">
-    <link rel="stylesheet" href="css/overlays.css?v=1.4">
-    <script src="js/data.js?v=1.4" defer></script>
-    <script src="js/iran-map-data.js?v=1.4" defer></script>
-    <script src="js/ui.js?v=1.4" defer></script>
-    <script src="js/catalog.js?v=1.4" defer></script>
-    <script src="js/cart.js?v=1.4" defer></script>
-    <script src="js/account.js?v=1.4" defer></script>
-    <script src="js/b2b.js?v=1.4" defer></script>
-    <script src="js/main.js?v=1.4" defer></script>
+    <link rel="stylesheet" href="css/base.css?v=1.7">
+    <link rel="stylesheet" href="css/layout.css?v=1.7">
+    <link rel="stylesheet" href="css/components.css?v=1.7">
+    <link rel="stylesheet" href="css/overlays.css?v=1.7">
+    <script src="js/data.js?v=2.1" defer></script>
+    <script src="js/iran-map-data.js?v=2.1" defer></script>
+    <script src="js/ui.js?v=2.1" defer></script>
+    <script src="js/catalog.js?v=2.1" defer></script>
+    <script src="js/cart.js?v=2.1" defer></script>
+    <script src="js/account.js?v=2.1" defer></script>
+    <script src="js/b2b.js?v=2.1" defer></script>
+    <script src="js/main.js?v=2.1" defer></script>
 </head>
 <body>
 
@@ -517,33 +517,74 @@
                 <div class="reps-toolbar">
                     <div class="search-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <input type="text" id="rep-search-input" placeholder="جستجوی نماینده، استان یا شهر..." onkeyup="searchRepresentatives(this.value)">
+                        <input type="text" id="rep-search-input" placeholder="جستجوی نماینده، استان، شهر یا نام مسئول..." onkeyup="searchRepresentatives(this.value)">
                     </div>
                     <div class="filter-row" style="margin:0;justify-content:flex-start" id="reps-region-row">
                         <button class="filter-btn active" data-region="all" onclick="filterRepsByRegion('all')">همه شعب</button>
-                        <button class="filter-btn" data-region="تهران" onclick="filterRepsByRegion('تهران')">استان تهران</button>
-                        <button class="filter-btn" data-region="اصفهان" onclick="filterRepsByRegion('اصفهان')">استان اصفهان</button>
-                        <button class="filter-btn" data-region="شیراز" onclick="filterRepsByRegion('شیراز')">استان فارس</button>
+                        <button class="filter-btn" data-region="تهران" onclick="filterRepsByRegion('تهران')">تهران</button>
+                        <button class="filter-btn" data-region="اصفهان" onclick="filterRepsByRegion('اصفهان')">اصفهان</button>
+                        <button class="filter-btn" data-region="شیراز" onclick="filterRepsByRegion('شیراز')">شیراز</button>
+                        <button class="filter-btn" data-region="مشهد" onclick="filterRepsByRegion('مشهد')">مشهد</button>
+                        <button class="filter-btn" data-region="تبریز" onclick="filterRepsByRegion('تبریز')">تبریز</button>
+                        <button class="filter-btn" data-region="کرج" onclick="filterRepsByRegion('کرج')">کرج</button>
+                        <button class="filter-btn" data-region="اهواز" onclick="filterRepsByRegion('اهواز')">اهواز</button>
+                        <button class="filter-btn" data-region="رشت" onclick="filterRepsByRegion('رشت')">رشت</button>
                     </div>
                 </div>
 
                 <div class="reps-count" style="margin-bottom: 20px;">
                     <span style="display:flex;align-items:center;gap:8px">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                        شعب مجاز و تاییدشده
+                        شبکه رسمی توزیع و نمایندگی‌های مانلی در سراسر کشور
                     </span>
-                    <span id="reps-count-badge" style="font-weight:600;color:var(--c-muted)">تعداد نمایندگان: ۳ نفر</span>
+                    <span id="reps-count-badge" style="font-weight:600;color:var(--c-muted)">تعداد کل نمایندگان فعال: ۸ نفر</span>
                 </div>
 
-                <div class="map-box">
-                    <svg class="iran-map" id="iran-map" viewBox="0 0 500 460" role="img" aria-label="نقشه استانی ایران با موقعیت نمایندگان">
-                        <g id="iran-provinces"></g>
-                        <g class="iran-pins" id="iran-pins"></g>
-                    </svg>
-                    <p>انبار مرکزی: تهران • شعب فعال: تهران، اصفهان و شیراز</p>
-                    <p style="margin-top:8px;font-size:11px">روی مهرهٔ موقعیت هر شهر بزنید تا مشخصات نماینده نمایش داده شود.</p>
+                <!-- چیدمان دو ستونه دسکتاپ (لیست سمت راست، نقشه سمت چپ) / استک متوازن در موبایل -->
+                <div class="reps-main-split">
+                    <!-- ستون سمت راست: لیست نمایندگان (در دسکتاپ راست، در موبایل پایین نقشه) -->
+                    <div class="reps-sidebar-col" id="reps-sidebar-col">
+                        <div class="reps-sidebar-header">
+                            <div class="reps-sidebar-title-row">
+                                <h3 class="reps-sidebar-title" id="reps-sidebar-title">لیست نمایندگی‌های مانلی</h3>
+                            </div>
+                            <p class="reps-sidebar-sub" id="reps-sidebar-sub">ارسال سریع شهری و دسترسی مستقیم به محصولات مانلی در سراسر کشور</p>
+                        </div>
+
+                        <div class="reps-cards-wrapper" id="reps-cards-wrapper">
+                            <!-- کارت‌های نمایندگان اینجا رندر می‌شوند -->
+                        </div>
+
+                        <!-- دکمه مشاهده موارد بیشتر -->
+                        <div class="reps-load-more-row" id="reps-load-more-row">
+                            <button class="reps-load-more-btn" id="reps-load-more-btn" type="button" onclick="toggleRepsExpand()">
+                                <span id="reps-load-more-text">مشاهده موارد بیشتر (۵ نماینده دیگر)</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="reps-chevron-icon"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ستون سمت چپ: نقشه استانی ایران -->
+                    <div class="reps-map-col" id="reps-map-col">
+                        <div class="map-box">
+                            <div class="map-top-bar">
+                                <div class="map-badge-live">
+                                    <span class="live-dot"></span>
+                                    <span>نقشه تعاملی شعب فعال کشور</span>
+                                </div>
+                                <span class="map-hint-text">کلیک روی هر نشانگر = فوکوس و جزئیات</span>
+                            </div>
+                            <svg class="iran-map" id="iran-map" viewBox="0 0 500 460" role="img" aria-label="نقشه استانی ایران با موقعیت نمایندگان">
+                                <g id="iran-provinces"></g>
+                                <g class="iran-pins" id="iran-pins"></g>
+                            </svg>
+                            <div class="map-footer-notes">
+                                <p>انبار مرکزی: تهران • شعب فعال: تهران، اصفهان، شیراز، مشهد، تبریز، کرج، اهواز و رشت</p>
+                                <p style="margin-top:6px;font-size:11.5px;color:rgba(245,238,228,.6)">با کلیک روی هر مهره، کارت نماینده در لیست برجسته شده و اطلاعات تماس باز می‌شود.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="reps-list-container"></div>
             </div>
         </section>
 
@@ -575,8 +616,8 @@
                         <ol style="display:grid;gap:12px;counter-reset:step;list-style:none">
                             <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۱</span><span style="font-size:13.5px"><b>درخواست شما</b> — فرم درخواست همکاری را تکمیل کنید.</span></li>
                             <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۲</span><span style="font-size:13.5px"><b>بررسی توسط دفتر مرکزی</b> — بررسی سوابق و آدرس اینستاگرام (حدود ۴۸ ساعت).</span></li>
-                            <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۳</span><span style="font-size:13.5px"><b>اعتماد و فعال‌سازی</b> — کد فعال‌سازی یک‌بارمصرف برای ورود به پنل.</span></li>
-                            <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۴</span><span style="font-size:13.5px"><b>ورود با کد</b> — ورود امن به پنل استاد با شماره همراه و کد.</span></li>
+                            <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۳</span><span style="font-size:13.5px"><b>اعتماد و فعال‌سازی</b> — رمز عبور برای شما ارسال می‌شود.</span></li>
+                            <li style="display:flex;gap:12px"><span style="width:28px;height:28px;flex-shrink:0;border-radius:50%;background:var(--c-warm);color:var(--c-rose-deep);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center">۴</span><span style="font-size:13.5px"><b>ورود به پنل</b> — ورود امن به پنل استاد با شماره همراه و رمز عبور (یا رمز یک‌بارمصرف).</span></li>
                         </ol>
                         <p class="form-note" style="margin-top:16px">پنل فقط برای افراد تاییدشده قابل دسترسی است. رمز عمومی در نسخه‌های رسمی استفاده نمی‌شود.</p>
                     </div>
@@ -615,13 +656,33 @@
                         <button class="btn btn-primary btn-block" onclick="submitEducatorApply()">ارسال درخواست همکاری</button>
 
                         <div style="border-top:1px solid var(--c-line);margin-top:20px;padding-top:20px">
-                            <h3 style="font-size:14.5px;margin-bottom:4px">ورود به پنل استاد</h3>
-                            <p class="form-note" style="margin-bottom:12px">فقط برای اساتید دارای کد فعال‌سازی یک‌بارمصرف.</p>
-                            <div class="field-row">
-                                <div class="field" style="margin-bottom:0"><label>شماره همراه</label><input type="tel" id="edu-login-phone" class="ltr" dir="ltr" style="text-align:right" placeholder="0912xxxxxxx"></div>
-                                <div class="field" style="margin-bottom:0"><label>کد فعال‌سازی یک‌بارمصرف</label><input type="text" id="edu-login-code" class="ltr" dir="ltr" style="text-align:right" placeholder="مانند: MN-7F3K9Q"></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px">
+                                <h3 style="font-size:14.5px;margin:0">ورود به پنل استاد</h3>
+                                <button type="button" id="edu-login-toggle-btn" class="auth-switch-link" style="width:auto;margin:0;font-size:12.5px;color:var(--c-rose-deep);cursor:pointer;background:none;border:none;padding:0;font-weight:700;display:inline-flex;align-items:center;gap:5px" onclick="toggleEducatorLoginMode()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <span id="edu-toggle-btn-text">ورود با رمز یک‌بارمصرف</span>
+                                </button>
                             </div>
-                            <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="attemptEducatorLogin()">ورود به پنل استاد</button>
+                            <p class="form-note" id="edu-login-note" style="margin-bottom:12px">ورود اساتید تاییدشده با شماره همراه و رمز عبور.</p>
+                            <div class="field-row">
+                                <div class="field" style="margin-bottom:0">
+                                    <label>شماره همراه</label>
+                                    <input type="tel" id="edu-login-phone" class="ltr" dir="ltr" style="text-align:right" placeholder="0912xxxxxxx" onkeydown="if(event.key==='Enter')attemptEducatorLogin()">
+                                </div>
+                                <div class="field" style="margin-bottom:0" id="edu-cred-field-wrap">
+                                    <label id="edu-cred-label">رمز عبور</label>
+                                    <input type="password" id="edu-login-pass" class="ltr" dir="ltr" style="text-align:left;padding-left:12px" placeholder="••••••••" onkeydown="if(event.key==='Enter')attemptEducatorLogin()">
+                                    <div id="edu-otp-input-wrap" style="display:none">
+                                        <div style="display:flex;gap:8px;align-items:stretch">
+                                            <input type="text" id="edu-login-code" class="ltr" dir="ltr" style="text-align:center;letter-spacing:3px;font-weight:700;flex:1" placeholder="کد پیامک‌شده" onkeydown="if(event.key==='Enter')attemptEducatorLogin()">
+                                            <button type="button" class="btn btn-primary btn-sm" id="edu-request-otp-btn" style="white-space:nowrap;padding:0 12px;font-size:12px;border-radius:10px;font-weight:700" onclick="requestEducatorOtp()">
+                                                دریافت رمز یک‌بارمصرف
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline btn-block" id="edu-login-submit-btn" style="margin-top:12px" onclick="attemptEducatorLogin()">ورود به پنل استاد</button>
                         </div>
                     </div>
                 </div>
@@ -1234,14 +1295,20 @@
                                 <div class="field">
                                     <label>استان و شهر تحویل *</label>
                                     <select id="co-city" onchange="onCheckoutCityChange()">
-                                        <option value="">انتخاب استان...</option>
-                                        <option value="تهران">استان تهران</option>
-                                        <option value="اصفهان">استان اصفهان</option>
-                                        <option value="شیراز">استان فارس (شیراز)</option>
-                                        <option value="البرز">استان البرز (کرج)</option>
-                                        <option value="خراسان رضوی">خراسان رضوی (مشهد)</option>
-                                        <option value="تبریز">آذربایجان شرقی (تبریز)</option>
-                                        <option value="سایر">سایر استان‌ها و شهرستان‌ها</option>
+                                        <option value="">انتخاب استان و شهر...</option>
+                                        <option value="تهران">تهران (استان تهران)</option>
+                                        <option value="اصفهان">اصفهان (استان اصفهان)</option>
+                                        <option value="شیراز">شیراز (استان فارس)</option>
+                                        <option value="مشهد">مشهد (خراسان رضوی)</option>
+                                        <option value="کرج">کرج (استان البرز)</option>
+                                        <option value="تبریز">تبریز (آذربایجان شرقی)</option>
+                                        <option value="رشت">رشت (استان گیلان)</option>
+                                        <option value="اهواز">اهواز (استان خوزستان)</option>
+                                        <option value="قم">قم (استان قم)</option>
+                                        <option value="یزد">یزد (استان یزد)</option>
+                                        <option value="کرمان">کرمان (استان کرمان)</option>
+                                        <option value="ساری">ساری (استان مازندران)</option>
+                                        <option value="سایر">سایر شهرها و شهرستان‌ها</option>
                                     </select>
                                 </div>
                                 <div class="field">
@@ -1266,31 +1333,16 @@
                             <input type="text" id="co-notes" placeholder="نکات مربوط به زمان تحویل یا هماهنگی">
                         </div>
 
-                        <!-- انتخاب روش تحویل و هماهنگی نماینده -->
+                        <!-- روش ارسال سفارش -->
                         <div style="margin-top:24px;border-top:1px solid var(--c-line);padding-top:16px">
                             <h3 style="font-size:16.5px;display:flex;align-items:center;gap:8px;margin-bottom:14px">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--c-rose)"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                                ۲. روش ارسال و هماهنگی
+                                ۲. روش ارسال سفارش
                             </h3>
 
-                            <div id="checkout-rep-banner" style="display:none" class="rep-suggest">
-                                <!-- محتوای خودکار با توجه به شهر کاربر -->
-                            </div>
-
                             <div class="shipping-options" id="shipping-options">
-                                <label class="shipping-radio-item" id="opt-shipping-rep" style="display:none">
-                                    <input type="radio" name="shipping-method" value="rep" checked onchange="updateShippingMethodUI()">
-                                    <div class="shipping-info">
-                                        <div class="shipping-head">
-                                            <b>تحویل مستقیم از طریق نماینده رسمی شهر</b>
-                                            <span class="badge badge-ok">ارسال سریع امروز</span>
-                                        </div>
-                                        <p>هماهنگی پیک، تحویل حضوری یا ارسال سریع از انبار نماینده محلی با گارانتی اصالت مانلی.</p>
-                                    </div>
-                                </label>
-
                                 <label class="shipping-radio-item" id="opt-shipping-direct">
-                                    <input type="radio" name="shipping-method" value="direct" onchange="updateShippingMethodUI()">
+                                    <input type="radio" name="shipping-method" value="direct" checked onchange="updateShippingMethodUI()">
                                     <div class="shipping-info">
                                         <div class="shipping-head">
                                             <b>ارسال پستی از انبار مرکزی مانلی (تهران)</b>
@@ -1492,22 +1544,47 @@
         </div>
     </div>
 
-    <!-- مودال پیشنهاد نماینده (پیش از خرید مستقیم) -->
-    <div class="modal-wrap" id="rep-modal">
-        <div class="modal-box">
-            <h3>نماینده رسمی در شهر شما</h3>
-            <p class="m-sub">شناسه: <span id="rep-modal-city" style="font-weight:800"></span> — برای تحویل سریع‌تر، می‌توانید مستقیماً از نماینده رسمی این شهر خرید کنید:</p>
-            <div class="rep-summary">
-                <p><b id="rep-modal-name"></b></p>
-                <p id="rep-modal-address"></p>
-                <p id="rep-modal-phone"></p>
-                <p id="rep-modal-insta"></p>
+    <!-- مودال پیشنهاد نماینده و خرید حضوری از فروشگاه -->
+    <div class="modal-wrap" id="rep-modal" onclick="if(event.target===this)chooseContinueOnline()">
+        <div class="modal-box" style="max-width:480px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;border-bottom:1px solid var(--c-line);padding-bottom:12px">
+                <div>
+                    <span class="chip chip-rose" style="font-size:11px;margin-bottom:6px;display:inline-flex">امکان خرید و تحویل حضوری</span>
+                    <h3 style="font-size:16.5px;margin:0">نمایندگی رسمی مانلی در شهر شما</h3>
+                </div>
+                <button type="button" class="modal-close-btn" onclick="chooseContinueOnline()" style="background:none;border:none;color:var(--c-muted);cursor:pointer;padding:4px">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary btn-sm" onclick="chooseRepCheckout()">خرید از نماینده شهر من</button>
-                <button class="btn btn-outline btn-sm" onclick="chooseDirectCheckout()">خرید مستقیم از مانلی</button>
+
+            <p class="m-sub" style="margin-bottom:14px;font-size:12.5px;line-height:1.8">
+                با توجه به آدرس شما در <b id="rep-modal-city" style="color:var(--c-rose-deep)"></b>، نمایندگی رسمی مانلی فعال است و می‌توانید بدون انتظار برای ارسال پستی، سفارش خود را به صورت حضوری و مستقیم از فروشگاه تحویل بگیرید:
+            </p>
+
+            <div class="rep-summary" style="background:var(--c-warm);border:1px solid var(--c-line);border-radius:14px;padding:16px;margin:12px 0 16px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                    <div style="width:30px;height:30px;border-radius:8px;background:rgba(201,150,106,.18);color:var(--c-rose-deep);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>
+                    </div>
+                    <b id="rep-modal-name" style="font-size:14px;color:var(--c-dark)"></b>
+                </div>
+                <p id="rep-modal-address" style="display:flex;gap:8px;font-size:12.5px;margin-bottom:6px;line-height:1.7"></p>
+                <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--c-muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--c-line)">
+                    <span id="rep-modal-phone" style="display:flex;align-items:center;gap:5px"></span>
+                    <span id="rep-modal-hours" style="display:flex;align-items:center;gap:5px"></span>
+                </div>
             </div>
-            <p class="form-note" style="margin-top:12px;text-align:center">در صورت انتخاب نماینده، سفارش شما به نام ایشان ثبت و از طریق تماس تلفنی هماهنگ می‌شود.</p>
+
+            <div style="display:grid;gap:10px;margin-top:16px">
+                <button type="button" class="btn btn-primary btn-block" style="padding:12px;font-weight:700;font-size:13.5px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="chooseStorePickup()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    خرید حضوری از فروشگاه
+                </button>
+                <button type="button" class="btn btn-outline btn-block btn-sm" style="color:var(--c-muted);border-color:var(--c-line);font-size:12px;padding:8px" onclick="chooseContinueOnline()">
+                    ادامه خرید از سایت (ارسال پستی از انبار مرکزی)
+                </button>
+            </div>
+            <p class="form-note" style="margin-top:12px;text-align:center;font-size:11.5px">در صورت انتخاب خرید حضوری، اقلام با فروشگاه هماهنگ شده و تسویه حساب در محل انجام می‌شود.</p>
         </div>
     </div>
 
@@ -1790,11 +1867,11 @@
     </div>
 
     <!-- اعلان عمومی -->
-    <div class="modal-wrap" id="alert-modal">
+    <div class="modal-wrap" id="alert-modal" onclick="if(event.target===this)closeAlert()">
         <div class="modal-box" style="text-align:center">
             <div class="alert-ico success" id="alert-ico">✓</div>
             <p class="alert-text" id="alert-text"></p>
-            <button class="btn btn-primary btn-block" style="margin-top:18px" onclick="closeAlert()">متوجه شدم</button>
+            <button class="btn btn-primary btn-block" id="alert-confirm-btn" style="margin-top:18px" onclick="closeAlert()" onkeydown="if(event.key==='Enter'||event.key==='Escape'||event.key===' '){event.preventDefault();closeAlert();}">متوجه شدم</button>
         </div>
     </div>
 

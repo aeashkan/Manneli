@@ -1812,6 +1812,342 @@
     }
 }
 
+/* ==========================================================================
+   طراحی مدرن و هماهنگ صفحه نماینده شهر من (چیدمان ۲ ستونه و لیست نمایندگان)
+   ========================================================================== */
+
+.reps-main-split {
+    display: grid;
+    grid-template-columns: 410px 1fr;
+    gap: 24px;
+    align-items: start;
+    margin-top: 10px;
+}
+
+/* سایدبار لیست نمایندگان (در دسکتاپ راست، در موبایل پایین نقشه) */
+.reps-sidebar-col {
+    background: #ffffff;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.reps-sidebar-header {
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--c-line);
+}
+
+.reps-sidebar-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.reps-sidebar-title {
+    font-size: 16.5px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0;
+    text-align: right;
+}
+
+.reps-sidebar-sub {
+    font-size: 12px;
+    color: var(--c-muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.reps-cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* کارت هر نماینده در سایدبار */
+.rep-side-card {
+    background: #faf8f5;
+    border: 1px solid rgba(201, 150, 106, 0.28);
+    border-radius: 12px;
+    padding: 14px 15px;
+    transition: all .25s ease;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.rep-side-card:hover {
+    background: #ffffff;
+    border-color: var(--c-rose);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);
+}
+
+.rep-side-card.is-active {
+    background: #ffffff;
+    border-color: var(--c-rose);
+    box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.18), 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.rep-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rep-rank-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--c-rose-deep);
+    background: rgba(225, 29, 72, 0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.rep-rank-pill.gold {
+    color: #92400e;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+}
+
+.rep-rating-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+.rep-card-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--c-dark);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rep-card-manager {
+    font-size: 12px;
+    color: var(--c-muted);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rep-card-manager svg {
+    width: 14px;
+    height: 14px;
+    color: var(--c-gold);
+    flex-shrink: 0;
+}
+
+.rep-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11.8px;
+    color: var(--c-text);
+    border-top: 1px dashed var(--c-line);
+    padding-top: 8px;
+}
+
+.rep-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.6;
+}
+
+.rep-detail-row svg {
+    width: 14px;
+    height: 14px;
+    color: var(--c-rose);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.rep-card-actions {
+    display: flex;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+.rep-card-actions .btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 12.5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* دکمه موارد بیشتر */
+.reps-load-more-row {
+    margin-top: 14px;
+}
+
+.reps-load-more-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 11px 16px;
+    background: rgba(225, 29, 72, 0.04);
+    border: 1.5px dashed var(--c-rose);
+    border-radius: 12px;
+    color: var(--c-rose-deep);
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .25s ease;
+    font-family: inherit;
+}
+
+.reps-load-more-btn:hover {
+    background: var(--c-rose-deep);
+    color: #ffffff;
+    border-color: var(--c-rose-deep);
+}
+
+.reps-chevron-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform .25s ease;
+}
+
+.reps-load-more-btn.is-expanded .reps-chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* ستون نقشه ایران */
+.reps-map-col {
+    position: relative;
+}
+
+.map-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.map-badge-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--c-cream);
+}
+
+.live-dot {
+    width: 9px;
+    height: 9px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+    animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.map-hint-text {
+    font-size: 11.5px;
+    color: rgba(245, 238, 228, 0.7);
+}
+
+.map-footer-notes {
+    margin-top: 14px;
+    border-top: 1px solid rgba(245, 238, 228, 0.1);
+    padding-top: 10px;
+}
+
+.map-footer-notes p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(245, 238, 228, 0.75);
+    line-height: 1.7;
+}
+
+/* افکت پین فعال در نقشه */
+.iran-pin.highlighted .pin-ring {
+    fill: #e11d48;
+    filter: drop-shadow(0 0 6px #e11d48);
+}
+
+.iran-pin.highlighted .pin-halo {
+    stroke: #e11d48;
+    animation: activePinPulse 1s infinite ease-out;
+}
+
+@keyframes activePinPulse {
+    0% { transform: scale(0.8); opacity: 0.9; }
+    100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* ==========================================================================
+   تنظیمات ریسپانسیو و توازن در موبایل
+   ========================================================================== */
+
+@media (max-width: 991px) {
+    .reps-main-split {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    /* در موبایل نقشه در بالا و لیست در پایین قرار می‌گیرد */
+    .reps-map-col {
+        order: 1;
+        width: 100%;
+    }
+
+    .reps-sidebar-col {
+        order: 2;
+        width: 100%;
+        padding: 16px;
+    }
+
+    .iran-map {
+        max-height: 320px;
+        margin: 6px auto 12px;
+    }
+
+    .map-box {
+        padding: 14px;
+    }
+
+    .map-top-bar {
+        font-size: 12px;
+    }
+
+    .map-hint-text {
+        font-size: 11px;
+    }
+}
+
 
 
 
