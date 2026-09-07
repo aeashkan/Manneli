@@ -383,7 +383,7 @@ function repSideCardHTML(r) {
         <div class="rep-side-card" id="rep-card-${r.region}" onclick="focusRepOnMap('${r.region}')">
             <div class="rep-card-top">
                 <div style="display:flex;align-items:center;gap:6px">
-                    <span class="rep-rank-pill" style="background:rgba(201,150,106,.15);color:var(--c-dark)">${r.province || r.region}</span>
+                    <span class="rep-rank-pill rep-province-pill">${r.province || r.region}</span>
                 </div>
                 <div class="rep-rating-tag">
                     <svg viewBox="0 0 24 24" fill="#f59e0b" width="13" height="13" style="color:#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>

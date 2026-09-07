@@ -36,3 +36,45 @@
 .footer-bottom button:hover { color: var(--c-cream); }
 .footer-bottom .fb-links { display: flex; gap: 18px; }
 
+/* ============ فوتر در تم روشن ============ */
+[data-theme="light"] .site-footer {
+    background: #EAE1D3;
+    color: #2C241A;
+    border-top: 1px solid rgba(44, 36, 26, 0.12);
+}
+[data-theme="light"] .footer-grid h4 {
+    color: #241B12;
+    border-bottom-color: rgba(44, 36, 26, 0.12);
+}
+[data-theme="light"] .footer-grid p,
+[data-theme="light"] .footer-grid li,
+[data-theme="light"] .footer-grid ul button {
+    color: #5C4A38;
+}
+[data-theme="light"] .footer-grid ul button:hover {
+    color: var(--c-rose-deep);
+}
+[data-theme="light"] .footer-socials a {
+    background: rgba(44, 36, 26, 0.05);
+    border-color: rgba(44, 36, 26, 0.14);
+    color: #7A4E27;
+}
+[data-theme="light"] .footer-socials a:hover {
+    background: var(--c-rose);
+    color: #FFFFFF;
+}
+[data-theme="light"] .footer-badges .f-badge {
+    background: rgba(44, 36, 26, 0.04);
+    border-color: rgba(44, 36, 26, 0.12);
+}
+[data-theme="light"] .footer-bottom {
+    border-top-color: rgba(44, 36, 26, 0.1);
+    color: #7C6A56;
+}
+[data-theme="light"] .footer-bottom button {
+    color: #6C5946;
+}
+[data-theme="light"] .footer-bottom button:hover {
+    color: #241B12;
+}
+

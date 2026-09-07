@@ -4,18 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>پورتال برند مانلی | Manneli Brand Portal</title>
-    <link rel="stylesheet" href="css/base.css?v=1.9">
-    <link rel="stylesheet" href="css/layout.css?v=1.9">
-    <link rel="stylesheet" href="css/components.css?v=1.9">
-    <link rel="stylesheet" href="css/overlays.css?v=1.9">
-    <script src="js/data.js?v=2.1" defer></script>
-    <script src="js/iran-map-data.js?v=2.1" defer></script>
-    <script src="js/ui.js?v=2.1" defer></script>
-    <script src="js/catalog.js?v=2.1" defer></script>
-    <script src="js/cart.js?v=2.1" defer></script>
-    <script src="js/account.js?v=2.1" defer></script>
-    <script src="js/b2b.js?v=2.1" defer></script>
-    <script src="js/main.js?v=2.1" defer></script>
+    <script>
+        (function() {
+            try {
+                var t = localStorage.getItem('manneli_theme');
+                if (t === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <link rel="stylesheet" href="css/base.css?v=2.6">
+    <link rel="stylesheet" href="css/layout.css?v=2.6">
+    <link rel="stylesheet" href="css/components.css?v=2.6">
+    <link rel="stylesheet" href="css/overlays.css?v=2.6">
+    <script src="js/data.js?v=2.6" defer></script>
+    <script src="js/iran-map-data.js?v=2.6" defer></script>
+    <script src="js/ui.js?v=2.6" defer></script>
+    <script src="js/catalog.js?v=2.6" defer></script>
+    <script src="js/cart.js?v=2.6" defer></script>
+    <script src="js/account.js?v=2.6" defer></script>
+    <script src="js/b2b.js?v=2.6" defer></script>
+    <script src="js/main.js?v=2.6" defer></script>
 </head>
 <body>
 
@@ -30,8 +40,17 @@
     <!-- هدر اصلی (کوتاه‌شده) -->
     <header class="site-header">
         <div class="container header-inner">
-            <div class="logo" onclick="switchTab('home')">
-                <img src="Logo/DarkLogo.png" alt="MANNELI" class="site-logo-img">
+            <div class="header-brand-wrap">
+                <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu(true)" aria-label="منوی دسترسی و خدمات" title="منوی دسترسی">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="logo" onclick="switchTab('home')">
+                    <img src="Logo/DarkLogo.png" alt="MANNELI" class="site-logo-img">
+                </div>
             </div>
 
             <nav class="main-nav">
@@ -46,6 +65,22 @@
             </nav>
 
             <div class="header-actions">
+                <!-- تاگل حالت شب و روز (Dark / Light Switch) -->
+                <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" type="button" aria-label="تغییر تم دارک و لایت" title="تغییر به حالت روشن">
+                    <span class="theme-toggle-thumb">
+                        <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                        </svg>
+                        <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="4"/>
+                            <path d="M12 2v2"/><path d="M12 20v2"/>
+                            <path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/>
+                            <path d="M2 12h2"/><path d="M20 12h2"/>
+                            <path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+                        </svg>
+                    </span>
+                </button>
+
                 <button class="login-btn" id="nav-profile-btn" onclick="handleAuthButtonClick()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     <span id="user-btn-label">ورود / عضویت</span>
@@ -1484,6 +1519,160 @@
             </div>
         </div>
     </footer>
+
+    <!-- اورلی و کشوی منوی همبرگری موبایل -->
+    <div class="overlay" id="mobile-menu-overlay" onclick="toggleMobileMenu(false)"></div>
+    <div class="mobile-menu-drawer" id="mobile-menu-drawer" aria-label="منوی کاربری و دسترسی مانلی">
+        <div class="mob-drawer-head">
+            <div class="mob-drawer-brand">
+                <img src="Logo/DarkLogo.png" alt="MANNELI" class="site-logo-img mob-drawer-logo">
+                <span class="mob-drawer-tagline">متریال تخصصی کاشت ناخن مانلی</span>
+            </div>
+            <button class="mob-drawer-close" onclick="toggleMobileMenu(false)" aria-label="بستن منو" title="بستن منو">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- کارت ورود سریع / حساب کاربری در بالای منو -->
+        <div class="mob-drawer-user-card" onclick="toggleMobileMenu(false); handleAuthButtonClick()">
+            <div class="mob-drawer-avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <div class="mob-drawer-user-info">
+                <span class="mob-user-title" id="mob-drawer-user-name">ورود / عضویت در مانلی</span>
+                <span class="mob-user-sub" id="mob-drawer-user-sub">مشاهده سفارش‌ها و اطلاعات حساب</span>
+            </div>
+            <svg class="mob-user-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+            </svg>
+        </div>
+
+        <div class="mob-drawer-body">
+            <!-- گروه ۱: بخش‌های آموزشی و سازمانی ویژه (دسترسی‌های اصلی مدنظر کاربر در موبایل) -->
+            <div class="mob-nav-group">
+                <span class="mob-nav-group-title">دسترسی‌های تخصصی و خدمات مانلی</span>
+
+                <button class="mob-drawer-link highlight" onclick="switchTab('educators')">
+                    <div class="link-icon gold-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>باشگاه اساتید مانلی</b>
+                        <span>ثبت‌نام همکاران آموزشی، کیت تست و پنل استاد</span>
+                    </div>
+                    <span class="link-badge">ویژه اساتید</span>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('academy')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>آکادمی و رسانه تخصصی MANNELI</b>
+                        <span>مقاله‌ها، ویدیوهای آموزشی و پادکست مانلی تاک</span>
+                    </div>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('about')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 8h.01"/><path d="M11 12h1v4h1"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>داستان برند مانلی</b>
+                        <span>اصالت، فلسفه محصولات و استانداردهای جهانی</span>
+                    </div>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('faq')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>سوالات متداول</b>
+                        <span>پاسخ به سوالات اساتید، فروشگاه‌ها و ناخن‌کاران</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- گروه ۲: صفحات اصلی فروشگاه -->
+            <div class="mob-nav-group">
+                <span class="mob-nav-group-title">بخش‌های فروشگاهی</span>
+
+                <button class="mob-drawer-link" onclick="switchTab('home')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>صفحه اصلی</b>
+                    </div>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('products')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>محصولات تخصصی مانلی</b>
+                    </div>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('reps')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>نماینده شهر من</b>
+                        <span>نقشه شعب رسمی سراسر کشور</span>
+                    </div>
+                </button>
+
+                <button class="mob-drawer-link" onclick="switchTab('b2b')">
+                    <div class="link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>
+                        </svg>
+                    </div>
+                    <div class="link-text">
+                        <b>همکاری عمده (B2B)</b>
+                        <span>درخواست اخذ نمایندگی فروشگاه‌ها</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- فوتر کشو -->
+        <div class="mob-drawer-foot">
+            <div class="mob-drawer-contact-row">
+                <span class="mob-contact-label">پشتیبانی و سفارش تلفنی:</span>
+                <a href="tel:02188776655" class="mob-contact-val ltr">۰۲۱-۸۸۷۷۶۶۵۵</a>
+            </div>
+            <div class="mob-drawer-insta-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                </svg>
+                <span class="ltr">@manneli.official</span>
+            </div>
+        </div>
+    </div>
 
     <!-- کشوی سبد خرید -->
     <div class="overlay" id="cart-overlay" onclick="toggleCart(false)"></div>

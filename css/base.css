@@ -145,6 +145,49 @@ a { color: inherit; text-decoration: none; }
 }
 @media (min-width: 768px) { .header-inner { height: 76px; } }
 
+.header-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: rgba(245, 238, 228, 0.08);
+    color: var(--c-cream);
+    border: 1px solid var(--c-line-dark);
+    cursor: pointer;
+    transition: all .2s ease;
+    flex-shrink: 0;
+}
+.mobile-menu-btn:hover {
+    color: var(--c-rose);
+    border-color: rgba(201, 150, 106, .4);
+    background: rgba(245, 238, 228, 0.12);
+}
+.mobile-menu-btn svg {
+    width: 20px;
+    height: 20px;
+}
+@media (min-width: 1100px) {
+    .mobile-menu-btn {
+        display: none !important;
+    }
+}
+[data-theme="light"] .mobile-menu-btn {
+    background: rgba(44, 36, 26, 0.06);
+    color: #2C241A;
+    border-color: rgba(44, 36, 26, 0.14);
+}
+[data-theme="light"] .mobile-menu-btn:hover {
+    background: rgba(44, 36, 26, 0.1);
+    color: var(--c-rose-deep);
+}
+
 .logo { display: flex; flex-direction: column; line-height: 1.15; cursor: pointer; }
 .site-logo-img {
     height: 38px;
@@ -211,6 +254,92 @@ a { color: inherit; text-decoration: none; }
 }
 .login-btn:hover { background: rgba(201,150,106,.22); }
 .login-btn svg { width: 15px; height: 15px; }
+
+/* ============ تاگل تم دارک / لایت (کپسولی مطابق عکس) ============ */
+.theme-toggle-btn {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    border-radius: 999px;
+    background: #463E37;
+    border: 1px solid rgba(245, 238, 228, 0.22);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 3px;
+    direction: ltr;
+    box-sizing: border-box;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+    flex-shrink: 0;
+    outline: none;
+}
+.theme-toggle-btn:hover {
+    border-color: rgba(201, 150, 106, 0.6);
+    box-shadow: 0 0 10px rgba(201, 150, 106, 0.25);
+}
+.theme-toggle-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2C241A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(24px); /* در حالت دارک در سمت راست مطابق تصویر */
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease, color 0.35s ease;
+    color: #FFFFFF;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+.theme-toggle-thumb .theme-icon {
+    width: 14px;
+    height: 14px;
+}
+.theme-toggle-thumb .sun-icon { display: none; }
+.theme-toggle-thumb .moon-icon { display: block; stroke-width: 2.2; }
+
+/* در وضعیت فعال تم روشن (Light Mode) */
+.theme-toggle-btn.light-mode {
+    background: #E8DCCB;
+    border-color: rgba(201, 150, 106, 0.5);
+}
+.theme-toggle-btn.light-mode .theme-toggle-thumb {
+    transform: translateX(0px); /* حرکت نرم به سمت چپ */
+    background: #FFFFFF;
+    color: #A77C32;
+    box-shadow: 0 2px 8px rgba(167, 124, 50, 0.35);
+}
+.theme-toggle-btn.light-mode .moon-icon { display: none; }
+.theme-toggle-btn.light-mode .sun-icon { display: block; stroke-width: 2.2; }
+
+@media (max-width: 480px) {
+    .header-actions { gap: 6px; }
+    .theme-toggle-btn {
+        width: 46px;
+        height: 25px;
+        padding: 2px;
+    }
+    .theme-toggle-thumb {
+        width: 19px;
+        height: 19px;
+        transform: translateX(21px);
+    }
+    .theme-toggle-btn.light-mode .theme-toggle-thumb {
+        transform: translateX(0px);
+    }
+    .theme-toggle-thumb .theme-icon {
+        width: 12px;
+        height: 12px;
+    }
+    .login-btn {
+        padding: 7px 10px;
+        font-size: 11.5px;
+        gap: 4px;
+    }
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
 
 /* ============ نوار پایینی موبایل (حداکثر ۵ گزینه + safe-area) ============ */
 .mobile-nav {
@@ -701,4 +830,288 @@ a { color: inherit; text-decoration: none; }
 .benefit .b-ico svg { width: 18px; height: 18px; }
 .benefit h4 { font-size: 14px; margin-bottom: 2px; }
 .benefit p { font-size: 12.5px; color: var(--c-muted); }
+
+/* ============================================================
+   MANNELI — پالت و استایل‌های اختصاصی تم روشن (Light Mode)
+   در حالت لایت: هدر، هیرو و فوتر روشن و المان‌ها دارای کنتراست تیره لوکس
+   ============================================================ */
+[data-theme="light"] {
+    --c-dark:      #FAF6F0;  /* هدر، هیرو و فوتر روشن لوکس می‌شوند */
+    --c-dark-mid:  #EFE4D6;  /* نوارهای روشن میانی */
+    --c-cream:     #2C241A;  /* جابه‌جایی اصلی: پس‌زمینه بدنه و محتوا قهوه‌ای تیره می‌شود */
+    --c-warm:      #382E24;  /* نوارهای میانی و استریپ‌ها قهوه‌ای گرم تیره */
+    --c-rose:      #C9966A;  /* رزگلد شیک */
+    --c-rose-deep: #DCAE83;  /* رزگلد روشن‌تر برای وضوح روی پس‌زمینه قهوه‌ای */
+    --c-gold:      #D4A853;  /* طلایی درخشان */
+    --c-text:      #F5EEE4;  /* متون روی پس‌زمینه تیره، کرم روشن با کنتراست بالا */
+    --c-muted:     rgba(245, 238, 228, .70);  /* متون فرعی و توضیحات */
+    --c-line:      rgba(245, 238, 228, .14);
+    --c-line-dark: rgba(44, 36, 26, .12);
+    --shadow:      0 6px 24px rgba(0, 0, 0, .28);
+    --shadow-lg:   0 16px 48px rgba(0, 0, 0, .45);
+}
+
+[data-theme="light"] body {
+    background: var(--c-cream);
+    color: var(--c-text);
+}
+
+/* هدر در تم روشن */
+[data-theme="light"] .site-header {
+    background: #FAF6F0;
+    border-bottom: 1px solid rgba(44, 36, 26, 0.1);
+    box-shadow: 0 4px 20px rgba(44, 36, 26, 0.04);
+}
+[data-theme="light"] .site-header .nav-link {
+    color: #4A3C2F;
+}
+[data-theme="light"] .site-header .nav-link:hover {
+    color: var(--c-rose-deep);
+    background: rgba(201, 150, 106, 0.1);
+}
+[data-theme="light"] .site-header .nav-link.active {
+    color: var(--c-rose-deep);
+    font-weight: 700;
+}
+[data-theme="light"] .site-header .icon-btn {
+    background: rgba(44, 36, 26, 0.05);
+    color: #2C241A;
+    border-color: rgba(44, 36, 26, 0.14);
+}
+[data-theme="light"] .site-header .icon-btn:hover {
+    color: var(--c-rose);
+    border-color: rgba(201, 150, 106, 0.5);
+}
+[data-theme="light"] .site-header .login-btn {
+    background: rgba(201, 150, 106, 0.14);
+    color: var(--c-rose-deep);
+    border-color: rgba(201, 150, 106, 0.4);
+}
+[data-theme="light"] .site-header .login-btn:hover {
+    background: rgba(201, 150, 106, 0.24);
+}
+
+/* نوار اعلان در تم روشن */
+[data-theme="light"] .announce-bar {
+    background: #EFE3D4;
+    color: #8C592B;
+    border-bottom: 1px solid rgba(201, 150, 106, 0.28);
+}
+[data-theme="light"] .announce-bar svg {
+    color: #A77C32;
+}
+
+/* هیرو در تم روشن */
+[data-theme="light"] .hero {
+    background: linear-gradient(180deg, #FAF6F0 0%, #EFE5D7 100%);
+    color: #2C241A;
+    border-bottom: 1px solid rgba(44, 36, 26, 0.1);
+}
+[data-theme="light"] .hero h1 {
+    color: #241B12;
+}
+[data-theme="light"] .hero h1 .brand-word {
+    color: #A77C32;
+}
+[data-theme="light"] .hero-lead {
+    color: #5C4A38;
+}
+[data-theme="light"] .hero-cta-row .btn-link {
+    border-color: rgba(44, 36, 26, 0.28);
+    color: #4A3C2F;
+}
+[data-theme="light"] .hero-cta-row .btn-link:hover {
+    border-color: var(--c-rose);
+    color: var(--c-rose-deep);
+}
+[data-theme="light"] .hero-gem-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(201, 150, 106, 0.35);
+    box-shadow: 0 16px 48px rgba(44, 36, 26, 0.08), 0 0 35px rgba(201, 150, 106, 0.12);
+}
+[data-theme="light"] .hero-gem-inner {
+    background: linear-gradient(135deg, #FAF7F2, #EFE4D6 70%);
+    border: 1px solid rgba(201, 150, 106, 0.28);
+}
+[data-theme="light"] .hero-logo-glow {
+    background: radial-gradient(circle, rgba(201, 150, 106, 0.22) 0%, rgba(245, 238, 228, 0) 70%);
+}
+[data-theme="light"] .hero-logo-img {
+    filter: drop-shadow(0 10px 24px rgba(44, 36, 26, 0.12));
+}
+
+/* جابه‌جایی المان‌های محتوا به رنگ تیره در تم روشن */
+[data-theme="light"] .audience-strip {
+    background: #382E24;
+    border-bottom: 1px solid rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .audience-card {
+    background: #2C241A;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .audience-card h3 {
+    color: #F5EEE4;
+}
+[data-theme="light"] .audience-card p {
+    color: rgba(245, 238, 228, 0.65);
+}
+
+[data-theme="light"] .section-alt {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+
+/* کارت‌های محصولات در زمینه قهوه‌ای تیره */
+[data-theme="light"] .product-card {
+    background: #352B21;
+    border: 1px solid rgba(245, 238, 228, 0.12);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+[data-theme="light"] .product-img {
+    background: #2C241A;
+}
+[data-theme="light"] .product-title {
+    color: #F5EEE4;
+}
+[data-theme="light"] .product-specs b {
+    color: #F5EEE4;
+}
+[data-theme="light"] .product-price {
+    color: #F5EEE4;
+}
+
+/* فیلترهای محصولات */
+[data-theme="light"] .filter-btn {
+    color: rgba(245, 238, 228, 0.7);
+    border-color: rgba(245, 238, 228, 0.2);
+}
+[data-theme="light"] .filter-btn:hover {
+    border-color: var(--c-rose);
+    color: var(--c-rose);
+}
+[data-theme="light"] .filter-btn.active {
+    background: #FAF6F0;
+    color: #2C241A;
+    border-color: #FAF6F0;
+}
+
+/* کارت‌های نمایندگان */
+[data-theme="light"] .rep-card {
+    background: #352B21;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .rep-card h3 {
+    color: #F5EEE4;
+}
+[data-theme="light"] .btn-outline {
+    color: #F5EEE4;
+    border-color: rgba(245, 238, 228, 0.25);
+}
+[data-theme="light"] .btn-outline:hover {
+    border-color: var(--c-rose);
+    color: var(--c-rose);
+}
+
+/* مقالات، مدیا و سوالات متداول */
+[data-theme="light"] .article-card,
+[data-theme="light"] .player-card,
+[data-theme="light"] .podcast-card,
+[data-theme="light"] .about-card,
+[data-theme="light"] .faq-item {
+    background: #352B21;
+    border-color: rgba(245, 238, 228, 0.12);
+    color: #F5EEE4;
+}
+[data-theme="light"] .article-card h3,
+[data-theme="light"] .about-card h3,
+[data-theme="light"] .faq-q {
+    color: #F5EEE4;
+}
+[data-theme="light"] .value-box {
+    background: #2C241A;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+
+/* فرم‌ها و اینپوت‌ها */
+[data-theme="light"] .card {
+    background: #352B21;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .card-dark {
+    background: #2C241A;
+    border-color: rgba(245, 238, 228, 0.14);
+}
+[data-theme="light"] .field input,
+[data-theme="light"] .field select,
+[data-theme="light"] .field textarea,
+[data-theme="light"] .search-box input {
+    background: rgba(245, 238, 228, 0.08);
+    border-color: rgba(245, 238, 228, 0.18);
+    color: #F5EEE4;
+}
+[data-theme="light"] .step-pill {
+    background: #2C241A;
+    color: rgba(245, 238, 228, 0.65);
+}
+[data-theme="light"] .step-pill.active {
+    background: #FAF6F0;
+    color: #2C241A;
+}
+
+/* آمار و نقشه */
+[data-theme="light"] .stats-band {
+    background: #FAF6F0;
+    color: #2C241A;
+    border-top: 1px solid rgba(44, 36, 26, 0.1);
+    border-bottom: 1px solid rgba(44, 36, 26, 0.1);
+}
+[data-theme="light"] .stat-label {
+    color: #6E5A47;
+}
+
+/* نوار پایینی موبایل در تم روشن */
+[data-theme="light"] .mobile-nav {
+    background: rgba(250, 246, 240, 0.96);
+    border-top: 1px solid rgba(44, 36, 26, 0.1);
+    box-shadow: 0 -4px 16px rgba(44, 36, 26, 0.04);
+}
+[data-theme="light"] .mob-nav-btn {
+    color: #6D5B48;
+}
+[data-theme="light"] .mob-nav-btn.active {
+    color: var(--c-rose-deep);
+}
+
+/* پنل داشبورد در تم روشن */
+[data-theme="light"] .dash-id h3 {
+    color: #F5EEE4;
+}
+[data-theme="light"] .side-box {
+    background: #352B21;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .side-box p {
+    color: rgba(245, 238, 228, 0.7);
+}
+[data-theme="light"] .order-row,
+[data-theme="light"] .ticket-row {
+    background: #382E24;
+    border-color: rgba(245, 238, 228, 0.12);
+}
+[data-theme="light"] .order-row .o-title,
+[data-theme="light"] .ticket-row .t-head {
+    color: #F5EEE4;
+}
+[data-theme="light"] .order-row .o-desc {
+    color: rgba(245, 238, 228, 0.6);
+}
+[data-theme="light"] .ticket-row p {
+    background: #2C241A;
+    border-color: rgba(245, 238, 228, 0.1);
+    color: rgba(245, 238, 228, 0.7);
+}
+[data-theme="light"] .code-row {
+    background: #241B12;
+    border-color: rgba(245, 238, 228, 0.14);
+}
 

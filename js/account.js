@@ -223,6 +223,15 @@ function syncProfileUI() {
     // تغییر عنوان دکمه هدر به «حساب کاربری» طبق درخواست
     $('user-btn-label').innerText = isAuth ? 'حساب کاربری' : 'ورود / عضویت';
 
+    const mobDrawerUser = $('mob-drawer-user-name');
+    const mobDrawerSub = $('mob-drawer-user-sub');
+    if (mobDrawerUser) {
+        mobDrawerUser.innerText = isAuth ? (currentUser.name || 'حساب کاربری من') : 'ورود / عضویت در مانلی';
+    }
+    if (mobDrawerSub) {
+        mobDrawerSub.innerText = isAuth ? (currentUser.phone || 'مشاهده سفارش‌ها و آدرس‌ها') : 'مشاهده سفارش‌ها و اطلاعات حساب';
+    }
+
     if (isAuth) {
         // پر کردن سایدبار
         $('sb-user-name').innerText = currentUser.name || 'کاربر مانلی';

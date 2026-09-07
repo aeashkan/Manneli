@@ -6,10 +6,25 @@ function switchTab(tabId) {
     if (target) target.classList.add('active');
     document.querySelectorAll('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
     document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+    document.querySelectorAll('.mob-drawer-link').forEach(b => {
+        const attr = b.getAttribute('onclick') || '';
+        b.classList.toggle('active', attr.includes(`'${tabId}'`));
+    });
     if (tabId === 'reps') {
         if (typeof renderRepsPage === 'function') renderRepsPage();
     }
+    toggleMobileMenu(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------- منوی همبرگری کشویی موبایل ----------
+function toggleMobileMenu(open) {
+    const drawer = $('mobile-menu-drawer');
+    const overlay = $('mobile-menu-overlay');
+    const shouldOpen = (open !== undefined) ? !!open : (drawer && !drawer.classList.contains('show'));
+    if (drawer) drawer.classList.toggle('show', shouldOpen);
+    if (overlay) overlay.classList.toggle('show', shouldOpen);
+    document.body.style.overflow = shouldOpen ? 'hidden' : '';
 }
 
 // ---------- آکادمی ----------
@@ -119,3 +134,44 @@ document.addEventListener('keydown', (e) => {
         }
     }
 }, true);
+
+// ---------- تم دارک / لایت ----------
+function applyTheme(theme) {
+    const isLight = (theme === 'light');
+    if (isLight) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+    try {
+        localStorage.setItem('manneli_theme', isLight ? 'light' : 'dark');
+    } catch (e) {}
+
+    // جایگزینی لوگوی رسمی (DarkLogo در دارک، LightLogo در لایت)
+    const logoSrc = isLight ? 'Logo/LightLogo.png' : 'Logo/DarkLogo.png';
+    document.querySelectorAll('.site-logo-img, .hero-logo-img, .footer-logo-img').forEach(img => {
+        img.src = logoSrc;
+    });
+
+    // به‌روزرسانی ظاهر دکمه تاگل (سوییچ قرصی)
+    const toggleBtn = $('theme-toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.classList.toggle('light-mode', isLight);
+        toggleBtn.setAttribute('aria-checked', isLight ? 'false' : 'true');
+        toggleBtn.title = isLight ? 'تغییر به حالت تیره' : 'تغییر به حالت روشن';
+    }
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = (current === 'light') ? 'dark' : 'light';
+    applyTheme(next);
+}
+
+function initTheme() {
+    let saved = 'dark';
+    try {
+        saved = localStorage.getItem('manneli_theme') || 'dark';
+    } catch (e) {}
+    applyTheme(saved);
+}
